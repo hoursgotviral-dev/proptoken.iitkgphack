@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI } from "@google/genai";
 import { useAuth } from '../context/AuthContext.tsx';
 import { DUMMY_ASSETS } from '../constants.tsx';
-import { Send, Loader2, Sparkles, Bot, Globe, ExternalLink, RefreshCw, MessageSquare } from 'lucide-react';
+import { Send, Loader2, Sparkles, Bot, Globe, ExternalLink, RefreshCw, MessageSquare, AlertTriangle } from 'lucide-react';
 
 const SUGGESTED_PROMPTS = [
   "What's the ROI for Emerald Meadows?",
@@ -23,6 +23,7 @@ const PropAI: React.FC = () => {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [apiKeyMissing, setApiKeyMissing] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,6 +35,11 @@ const PropAI: React.FC = () => {
   const handleSend = async (overrideInput?: string) => {
     const messageToSend = overrideInput || input.trim();
     if (!messageToSend || isTyping) return;
+
+    if (!process.env.API_KEY) {
+      setApiKeyMissing(true);
+      return;
+    }
 
     setInput('');
     const newMessages = [...messages, { role: 'user' as const, text: messageToSend }];
@@ -91,11 +97,15 @@ const PropAI: React.FC = () => {
           });
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Generation Error:", error);
+      const errorMessage = error.message?.includes('API_KEY') 
+        ? "Analyst connection refused. Secure API Key missing." 
+        : "Neural link disruption. Please verify your connection to the PropToken Ledger.";
+      
       setMessages(prev => [...prev, { 
         role: 'model', 
-        text: "Error syncing with the AI Analyst. Please check your network or refresh the session." 
+        text: errorMessage 
       }]);
     } finally {
       setIsTyping(false);
@@ -110,6 +120,24 @@ const PropAI: React.FC = () => {
       }
     ]);
   };
+
+  if (apiKeyMissing) {
+    return (
+      <div className="max-w-xl mx-auto mt-20 p-10 bg-white dark:bg-slate-900 border-4 border-red-500 rounded-3xl text-center shadow-2xl">
+        <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-6" />
+        <h1 className="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter uppercase mb-4">Analyst Offline</h1>
+        <p className="text-slate-500 dark:text-slate-400 font-bold mb-8 leading-relaxed">
+          The PropAI neural link requires an active Gemini API Key. Please configure <code className="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">API_KEY</code> in your environment settings.
+        </p>
+        <button 
+          onClick={() => window.location.reload()}
+          className="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-8 py-4 rounded-xl font-black uppercase tracking-widest text-xs btn-flat"
+        >
+          Retry Connection
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto h-[calc(100vh-12rem)] flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -146,7 +174,7 @@ const PropAI: React.FC = () => {
                 )}
                 <div className={`p-6 rounded-2xl border-2 font-bold text-sm leading-relaxed transition-all ${
                   m.role === 'user' 
-                  ? 'bg-slate-900 text-white border-slate-900 rounded-tr-none' 
+                  ? 'bg-slate-900 text-white border-slate-900 rounded-tr-none shadow-[4px_4px_0px_rgba(79,70,229,0.2)]' 
                   : 'bg-slate-50 dark:bg-slate-800 border-slate-900 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-tl-none'
                 }`}>
                   <div className="whitespace-pre-wrap">{m.text}</div>
@@ -173,7 +201,6 @@ const PropAI: React.FC = () => {
             </div>
           ))}
 
-          {/* Suggested Prompts - Only show at start or after reset */}
           {messages.length === 1 && !isTyping && (
             <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-300">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-2 flex items-center gap-2">
@@ -184,9 +211,9 @@ const PropAI: React.FC = () => {
                   <button
                     key={i}
                     onClick={() => handleSend(prompt)}
-                    className="p-4 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-xl text-left text-xs font-bold hover:border-indigo-600 dark:hover:border-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex items-center justify-between group"
+                    className="p-4 bg-white dark:bg-slate-800 border-2 border-slate-900 dark:border-slate-700 rounded-xl text-left text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex items-center justify-between group"
                   >
-                    <span className="text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 transition-colors">{prompt}</span>
+                    <span className="text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 transition-colors uppercase text-[10px] tracking-tight">{prompt}</span>
                     <Sparkles className="w-3 h-3 text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </button>
                 ))}
@@ -208,7 +235,7 @@ const PropAI: React.FC = () => {
           <div className="flex gap-4">
             <input 
               type="text" 
-              placeholder="Ask about ROI, land verification, or the PropToken Value Rail..."
+              placeholder="Query ROI in Bengaluru or explain Value Rail..."
               className="flex-1 bg-white dark:bg-slate-800 border-4 border-slate-900 dark:border-slate-700 px-6 py-4 rounded-xl font-black outline-none focus:ring-4 focus:ring-indigo-600/20 transition-all dark:text-slate-100 text-[11px] uppercase tracking-wider"
               value={input}
               onChange={e => setInput(e.target.value)}

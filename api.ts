@@ -1,6 +1,7 @@
 
 import { User, Wallet, ActionHistory } from './types.ts';
 import { db } from './db.ts';
+import { DUMMY_ASSETS } from './constants.tsx';
 
 export const api = {
   async getCurrentUser(): Promise<{ user: User; wallet: Wallet } | null> {
@@ -43,16 +44,18 @@ export const api = {
 
   async buyTokens(email: string, assetId: string, amount: number): Promise<{ txHash: string; wallet: Wallet }> {
     const wallet = db.getWallet(email);
-    const cost = amount * 5000; // Simplified price logic for plots
+    const asset = DUMMY_ASSETS.find(a => a.id === assetId);
+    const price = asset?.tokenPrice || 5000;
+    const cost = amount * price;
     
-    wallet.tokensByAsset[assetId] = (wallet.tokensByAsset[assetId] || 0) + amount;
+    wallet.tokensByAsset[assetId] = (Number(wallet.tokensByAsset[assetId]) || 0) + amount;
     wallet.stablecoinBalance -= cost;
     wallet.totalInvested += cost;
     
     const action: ActionHistory = {
       id: Math.random().toString(36).substring(2, 11),
       type: 'BUY_TOKENS',
-      description: `Bought ${amount} units of asset ${assetId}`,
+      description: `Bought ${amount} units of ${asset?.name || assetId}`,
       timestamp: new Date().toISOString(),
       amount: `₹${cost.toLocaleString()}`,
       txHash: '0x' + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join('')
@@ -65,16 +68,21 @@ export const api = {
 
   async swapToStable(email: string, assetId: string, amount: number): Promise<{ txHash: string; wallet: Wallet }> {
     const wallet = db.getWallet(email);
-    const value = amount * 5000;
+    const asset = DUMMY_ASSETS.find(a => a.id === assetId);
+    const price = asset?.tokenPrice || 5000;
+    const value = amount * price;
     
-    wallet.tokensByAsset[assetId] -= amount;
+    const currentTokens = Number(wallet.tokensByAsset[assetId]) || 0;
+    if (currentTokens < amount) throw new Error("Insufficient units for liquidation");
+
+    wallet.tokensByAsset[assetId] = currentTokens - amount;
     wallet.stablecoinBalance += value;
-    wallet.totalInvested -= value;
+    wallet.totalInvested = Math.max(0, wallet.totalInvested - value);
 
     const action: ActionHistory = {
       id: Math.random().toString(36).substring(2, 11),
       type: 'SWAP',
-      description: `Liquidated ${amount} units to INR stablecoins`,
+      description: `Liquidated ${amount} units of ${asset?.name || assetId} to INR`,
       timestamp: new Date().toISOString(),
       amount: `₹${value.toLocaleString()}`,
       txHash: '0x' + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join('')
@@ -87,15 +95,20 @@ export const api = {
 
   async lockCollateral(email: string, assetId: string, amount: number): Promise<{ txHash: string; wallet: Wallet }> {
     const wallet = db.getWallet(email);
-    const value = amount * 5000;
+    const asset = DUMMY_ASSETS.find(a => a.id === assetId);
+    const price = asset?.tokenPrice || 5000;
+    const value = amount * price;
     
-    wallet.tokensByAsset[assetId] -= amount;
+    const currentTokens = Number(wallet.tokensByAsset[assetId]) || 0;
+    if (currentTokens < amount) throw new Error("Insufficient units for collateral");
+
+    wallet.tokensByAsset[assetId] = currentTokens - amount;
     wallet.lockedCollateral += value;
 
     const action: ActionHistory = {
       id: Math.random().toString(36).substring(2, 11),
       type: 'COLLATERAL_LOCK',
-      description: `Locked ${amount} units as credit collateral`,
+      description: `Locked ${amount} units of ${asset?.name || assetId} as collateral`,
       timestamp: new Date().toISOString(),
       txHash: '0x' + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join('')
     };
@@ -107,6 +120,8 @@ export const api = {
 
   async pay(email: string, amount: number): Promise<{ txHash: string; wallet: Wallet }> {
     const wallet = db.getWallet(email);
+    if (wallet.stablecoinBalance < amount) throw new Error("Insufficient INR balance");
+
     wallet.stablecoinBalance -= amount;
 
     const action: ActionHistory = {
