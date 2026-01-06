@@ -1,22 +1,22 @@
 
 import React from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext.tsx';
 
 // Pages
-import Landing from './pages/Landing';
-import SignUp from './pages/SignUp';
-import SignIn from './pages/SignIn';
-import Dashboard from './pages/Dashboard';
-import Verify from './pages/Verify';
-import Fractional from './pages/Fractional';
-import Yield from './pages/Yield';
-import Swap from './pages/Swap';
-import Pay from './pages/Pay';
-import Account from './pages/Account';
+import Landing from './pages/Landing.tsx';
+import SignUp from './pages/SignUp.tsx';
+import SignIn from './pages/SignIn.tsx';
+import Dashboard from './pages/Dashboard.tsx';
+import Verify from './pages/Verify.tsx';
+import Fractional from './pages/Fractional.tsx';
+import Yield from './pages/Yield.tsx';
+import Swap from './pages/Swap.tsx';
+import Pay from './pages/Pay.tsx';
+import Account from './pages/Account.tsx';
 
 // Components
-import Layout from './components/Layout';
+import Layout from './components/Layout.tsx';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();

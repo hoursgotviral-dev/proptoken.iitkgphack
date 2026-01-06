@@ -1,8 +1,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { AuthContextType, User, Wallet } from '../types';
-import { INITIAL_WALLET } from '../constants';
-import { api } from '../api';
+import { AuthContextType, User, Wallet } from '../types.ts';
+import { INITIAL_WALLET } from '../constants.tsx';
+import { api } from '../api.ts';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -12,7 +12,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isConnecting, setIsConnecting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Sync session on load from real API
   useEffect(() => {
     const initSession = async () => {
       try {
@@ -22,7 +21,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setWallet(session.wallet);
         }
       } catch (error) {
-        console.error("Session hydration failed:", error);
+        console.warn("Session hydration bypassed:", error);
       } finally {
         setIsLoading(false);
       }
@@ -98,14 +97,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  if (isLoading) return null;
-
   return (
     <AuthContext.Provider value={{ 
       user, wallet, isConnecting, connectWallet, signIn, signUp, signOut, 
       buyTokens, swapToStablecoin, lockAsCollateral, makePayment 
     }}>
-      {children}
+      {!isLoading && children}
     </AuthContext.Provider>
   );
 };

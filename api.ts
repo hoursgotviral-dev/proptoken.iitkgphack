@@ -1,179 +1,125 @@
 
-import { User, Wallet, ActionHistory } from './types';
-
-const BASE_URL = '/api';
-
-const getHeaders = () => {
-  const token = localStorage.getItem('proptoken_jwt');
-  return {
-    'Content-Type': 'application/json',
-    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-  };
-};
+import { User, Wallet, ActionHistory } from './types.ts';
+import { db } from './db.ts';
 
 export const api = {
-  // --- Auth API ---
   async getCurrentUser(): Promise<{ user: User; wallet: Wallet } | null> {
-    const token = localStorage.getItem('proptoken_jwt');
-    if (!token) return null;
-    
-    try {
-      const response = await fetch(`${BASE_URL}/auth/me`, {
-        headers: getHeaders()
-      });
-      const result = await response.json();
-      if (result.success) {
-        return {
-          user: result.data.user,
-          wallet: await this.getWallet(result.data.user.email)
-        };
-      }
-      return null;
-    } catch {
-      return null;
-    }
+    const user = db.getCurrentUser();
+    if (!user) return null;
+    const wallet = db.getWallet(user.email);
+    return { user, wallet };
   },
 
   async login(email: string): Promise<User | null> {
-    const response = await fetch(`${BASE_URL}/auth/signin`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({ email, password: 'password123' }) // Simplified for demo
-    });
-    const result = await response.json();
-    if (result.success) {
-      localStorage.setItem('proptoken_jwt', result.data.token);
-      localStorage.setItem('proptoken_session', JSON.stringify(result.data.user));
-      return result.data.user;
+    const users = db.getUsers();
+    const user = users.find(u => u.email === email);
+    if (user) {
+      db.setCurrentUser(user);
+      return user;
     }
-    throw new Error(result.error?.message || 'Login failed');
+    return null;
   },
 
   async register(name: string, email: string): Promise<User> {
-    const response = await fetch(`${BASE_URL}/auth/signup`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({ name, email, password: 'password123' })
-    });
-    const result = await response.json();
-    if (result.success) {
-      localStorage.setItem('proptoken_jwt', result.data.token);
-      localStorage.setItem('proptoken_session', JSON.stringify(result.data.user));
-      return result.data.user;
-    }
-    throw new Error(result.error?.message || 'Registration failed');
+    const newUser: User = { name, email };
+    db.saveUser(newUser);
+    db.setCurrentUser(newUser);
+    return newUser;
   },
 
   async logout() {
-    localStorage.removeItem('proptoken_jwt');
-    localStorage.removeItem('proptoken_session');
+    db.setCurrentUser(null);
   },
 
   async connectWallet(email: string, address: string): Promise<User> {
-    // In a real app, this would be a PUT/PATCH to /account/profile
-    const userJson = localStorage.getItem('proptoken_session');
-    if (userJson) {
-      const user = JSON.parse(userJson);
-      user.walletAddress = address;
-      localStorage.setItem('proptoken_session', JSON.stringify(user));
-      return user;
-    }
-    throw new Error("Session lost");
+    db.updateUser(email, { walletAddress: address });
+    const user = db.getCurrentUser();
+    return user!;
   },
 
-  // --- Ledger API ---
   async getWallet(email: string): Promise<Wallet> {
-    const response = await fetch(`${BASE_URL}/wallet/summary`, {
-      headers: getHeaders()
-    });
-    const result = await response.json();
-    
-    // Fetch history for detailed view
-    const historyRes = await fetch(`${BASE_URL}/account/recent-actions`, {
-      headers: getHeaders()
-    });
-    const historyResult = await historyRes.json();
-
-    // Fetch positions for tokens map
-    const positionsRes = await fetch(`${BASE_URL}/wallet/positions`, {
-      headers: getHeaders()
-    });
-    const positionsResult = await positionsRes.json();
-
-    const tokensMap: Record<string, number> = {};
-    if (positionsResult.success) {
-      positionsResult.data.forEach((p: any) => {
-        tokensMap[p.assetId] = p.tokensOwned;
-      });
-    }
-
-    if (result.success) {
-      return {
-        ...result.data,
-        tokensByAsset: tokensMap,
-        history: historyResult.success ? historyResult.data : []
-      };
-    }
-    throw new Error("Failed to fetch wallet");
+    return db.getWallet(email);
   },
 
   async buyTokens(email: string, assetId: string, amount: number): Promise<{ txHash: string; wallet: Wallet }> {
-    const assetResponse = await fetch(`${BASE_URL}/assets`, { headers: getHeaders() });
-    const assetsData = await assetResponse.json();
-    const asset = assetsData.data.find((a: any) => a.id === assetId);
+    const wallet = db.getWallet(email);
+    const cost = amount * 5000; // Simplified price logic
     
-    const response = await fetch(`${BASE_URL}/fractional/purchase`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({ assetId, amountStablecoin: amount * (asset?.tokenPrice || 5000) })
-    });
-    const result = await response.json();
-    if (result.success) {
-      const fullWallet = await this.getWallet(email);
-      return { txHash: result.data.transaction.id, wallet: fullWallet };
-    }
-    throw new Error(result.error?.message || "Purchase failed");
+    wallet.tokensByAsset[assetId] = (wallet.tokensByAsset[assetId] || 0) + amount;
+    wallet.stablecoinBalance -= cost;
+    wallet.totalInvested += cost;
+    
+    const action: ActionHistory = {
+      id: Math.random().toString(36).substr(2, 9),
+      type: 'BUY_TOKENS',
+      description: `Bought ${amount} tokens of asset ${assetId}`,
+      timestamp: new Date().toISOString(),
+      amount: `₹${cost.toLocaleString()}`,
+      txHash: '0x' + Math.random().toString(16).substr(2, 40)
+    };
+    
+    wallet.history.unshift(action);
+    db.updateWallet(email, wallet);
+    return { txHash: action.txHash!, wallet };
   },
 
   async swapToStable(email: string, assetId: string, amount: number): Promise<{ txHash: string; wallet: Wallet }> {
-    const response = await fetch(`${BASE_URL}/swap/swap`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({ assetId, tokenAmount: amount })
-    });
-    const result = await response.json();
-    if (result.success) {
-      const fullWallet = await this.getWallet(email);
-      return { txHash: result.data.transaction.id, wallet: fullWallet };
-    }
-    throw new Error(result.error?.message || "Swap failed");
+    const wallet = db.getWallet(email);
+    const value = amount * 5000;
+    
+    wallet.tokensByAsset[assetId] -= amount;
+    wallet.stablecoinBalance += value;
+    wallet.totalInvested -= value;
+
+    const action: ActionHistory = {
+      id: Math.random().toString(36).substr(2, 9),
+      type: 'SWAP',
+      description: `Liquidated ${amount} tokens to INR`,
+      timestamp: new Date().toISOString(),
+      amount: `₹${value.toLocaleString()}`,
+      txHash: '0x' + Math.random().toString(16).substr(2, 40)
+    };
+
+    wallet.history.unshift(action);
+    db.updateWallet(email, wallet);
+    return { txHash: action.txHash!, wallet };
   },
 
   async lockCollateral(email: string, assetId: string, amount: number): Promise<{ txHash: string; wallet: Wallet }> {
-    const response = await fetch(`${BASE_URL}/collateral/lock`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({ assetId, tokenAmountToLock: amount })
-    });
-    const result = await response.json();
-    if (result.success) {
-      const fullWallet = await this.getWallet(email);
-      return { txHash: result.data.transaction.id, wallet: fullWallet };
-    }
-    throw new Error(result.error?.message || "Lock failed");
+    const wallet = db.getWallet(email);
+    const value = amount * 5000;
+    
+    wallet.tokensByAsset[assetId] -= amount;
+    wallet.lockedCollateral += value;
+
+    const action: ActionHistory = {
+      id: Math.random().toString(36).substr(2, 9),
+      type: 'COLLATERAL_LOCK',
+      description: `Locked ${amount} tokens as collateral`,
+      timestamp: new Date().toISOString(),
+      txHash: '0x' + Math.random().toString(16).substr(2, 40)
+    };
+
+    wallet.history.unshift(action);
+    db.updateWallet(email, wallet);
+    return { txHash: action.txHash!, wallet };
   },
 
   async pay(email: string, amount: number): Promise<{ txHash: string; wallet: Wallet }> {
-    const response = await fetch(`${BASE_URL}/pay/pay`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({ amountStablecoin: amount })
-    });
-    const result = await response.json();
-    if (result.success) {
-      const fullWallet = await this.getWallet(email);
-      return { txHash: result.data.transaction.id, wallet: fullWallet };
-    }
-    throw new Error(result.error?.message || "Payment failed");
+    const wallet = db.getWallet(email);
+    wallet.stablecoinBalance -= amount;
+
+    const action: ActionHistory = {
+      id: Math.random().toString(36).substr(2, 9),
+      type: 'PAYMENT',
+      description: `Payment of ₹${amount.toLocaleString()} settled`,
+      timestamp: new Date().toISOString(),
+      amount: `₹${amount.toLocaleString()}`,
+      txHash: '0x' + Math.random().toString(16).substr(2, 40)
+    };
+
+    wallet.history.unshift(action);
+    db.updateWallet(email, wallet);
+    return { txHash: action.txHash!, wallet };
   }
 };

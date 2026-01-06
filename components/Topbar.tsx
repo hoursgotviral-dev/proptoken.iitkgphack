@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.tsx';
 import { Bell, Search, LogOut, Settings, User, Sun, Moon, Wallet as WalletIcon, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
