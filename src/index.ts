@@ -2,6 +2,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
 
 // Import Routes
 import authRoutes from './api/authRoutes';
@@ -16,64 +17,46 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-/**
- * MIDDLEWARE SETUP
- * We use strategic casting to 'any' here because the 'express' types 
- * often collide with the global 'DOM' types in mixed environments.
- */
 const appInstance = app as any;
 
 appInstance.use(cors());
 appInstance.use(express.json());
 
-// Root API
-app.get('/', (req: Request, res: Response) => {
-  (res as any).json({ 
-    success: true, 
-    message: 'PropToken Ledger API v1.0',
-    status: 'Operational'
-  });
-});
+// --- API ROUTES ---
+const apiRouter = express.Router();
 
-// Route Handlers
-app.use('/auth', authRoutes);
-app.use('/assets', assetRoutes);
-app.use('/account', accountRoutes);
+apiRouter.use('/auth', authRoutes);
+apiRouter.use('/assets', assetRoutes);
+apiRouter.use('/account', accountRoutes);
+apiRouter.use('/fractional', transactionRoutes);
+apiRouter.use('/swap', transactionRoutes);
+apiRouter.use('/pay', transactionRoutes);
+apiRouter.use('/collateral', transactionRoutes);
+apiRouter.use('/verify', assetRoutes);
 
-// Mounting specific utility routes
-app.use('/fractional', transactionRoutes);
-app.use('/swap', transactionRoutes);
-app.use('/pay', transactionRoutes);
-app.use('/collateral', transactionRoutes);
-app.use('/verify', assetRoutes);
-
-// Generic Wallet & Yield Summary Endpoints
-app.get('/wallet/summary', requireAuth, (req: Request, res: Response) => {
+apiRouter.get('/wallet/summary', requireAuth, (req: Request, res: Response) => {
   const userId = (req as AuthRequest).user?.id;
   if (!userId) {
     return (res as any).status(401).json({ success: false, error: { message: 'Identity required' } });
   }
-
   const summary = getWalletSummary(userId);
   (res as any).json({ success: true, data: summary });
 });
 
-app.get('/wallet/positions', requireAuth, (req: Request, res: Response) => {
+apiRouter.get('/wallet/positions', requireAuth, (req: Request, res: Response) => {
   const userId = (req as AuthRequest).user?.id;
   if (!userId) {
     return (res as any).status(401).json({ success: false, error: { message: 'Identity required' } });
   }
-
   const positions = getWalletPositions(userId);
   (res as any).json({ success: true, data: positions });
 });
 
-app.get('/yield', requireAuth, (req: Request, res: Response) => {
+apiRouter.get('/yield', requireAuth, (req: Request, res: Response) => {
   const userId = (req as AuthRequest).user?.id;
   if (!userId) {
     return (res as any).status(401).json({ success: false, error: { message: 'Identity required' } });
   }
-
   const positions = getWalletPositions(userId);
   const yieldHistory = [
     { month: 'Jan', income: 4500 }, { month: 'Feb', income: 5200 },
@@ -83,7 +66,6 @@ app.get('/yield', requireAuth, (req: Request, res: Response) => {
     { month: 'Sep', income: 9300 }, { month: 'Oct', income: 10500 },
     { month: 'Nov', income: 11200 }, { month: 'Dec', income: 12500 },
   ];
-  
   const yieldData = positions.map(p => ({
     assetId: p.assetId,
     assetName: p.assetName,
@@ -91,11 +73,24 @@ app.get('/yield', requireAuth, (req: Request, res: Response) => {
     monthlyIncome: Math.round(p.currentValue * (p.yieldPercentage / 100) / 12),
     yearlyIncome: Math.round(p.currentValue * (p.yieldPercentage / 100))
   }));
-
   (res as any).json({ success: true, data: { yields: yieldData, history: yieldHistory } });
 });
 
-// Centralized Error Handling Middleware
+// Mount the API Router
+app.use('/api', apiRouter);
+
+// --- STATIC ASSETS ---
+// Serve static files (index.html, index.tsx, etc.) from the root directory
+app.use(express.static(path.resolve('.')));
+
+// --- SPA FALLBACK ---
+// For any request that doesn't match an API route or a specific file, serve index.html
+// This is critical for React Router to work correctly on page refresh.
+app.get('*', (req: Request, res: Response) => {
+  res.sendFile(path.resolve('index.html'));
+});
+
+// Centralized Error Handling
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error('[System Error]:', err.stack);
   (res as any).status(500).json({
@@ -108,5 +103,5 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`PropToken Protocol active on port ${PORT}`);
+  console.log(`PropToken Backend running on port ${PORT}`);
 });
