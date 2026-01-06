@@ -155,7 +155,7 @@ const Landing: React.FC = () => {
             <a href="#" className="hover:text-indigo-400 transition-colors">Compliance</a>
             <a href="#" className="hover:text-indigo-400 transition-colors">Contact</a>
           </div>
-          <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">© 2024 PROPTOKEN SOLUTIONS LTD</p>
+          <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">INSTITUTIONAL ACCESS • POWERED BY POLYGON • 2024</p>
         </div>
       </footer>
     </div>
