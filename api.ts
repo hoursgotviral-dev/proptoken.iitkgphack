@@ -43,19 +43,19 @@ export const api = {
 
   async buyTokens(email: string, assetId: string, amount: number): Promise<{ txHash: string; wallet: Wallet }> {
     const wallet = db.getWallet(email);
-    const cost = amount * 5000; // Simplified price logic
+    const cost = amount * 5000; // Simplified price logic for plots
     
     wallet.tokensByAsset[assetId] = (wallet.tokensByAsset[assetId] || 0) + amount;
     wallet.stablecoinBalance -= cost;
     wallet.totalInvested += cost;
     
     const action: ActionHistory = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).substring(2, 11),
       type: 'BUY_TOKENS',
-      description: `Bought ${amount} tokens of asset ${assetId}`,
+      description: `Bought ${amount} units of asset ${assetId}`,
       timestamp: new Date().toISOString(),
       amount: `₹${cost.toLocaleString()}`,
-      txHash: '0x' + Math.random().toString(16).substr(2, 40)
+      txHash: '0x' + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join('')
     };
     
     wallet.history.unshift(action);
@@ -72,12 +72,12 @@ export const api = {
     wallet.totalInvested -= value;
 
     const action: ActionHistory = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).substring(2, 11),
       type: 'SWAP',
-      description: `Liquidated ${amount} tokens to INR`,
+      description: `Liquidated ${amount} units to INR stablecoins`,
       timestamp: new Date().toISOString(),
       amount: `₹${value.toLocaleString()}`,
-      txHash: '0x' + Math.random().toString(16).substr(2, 40)
+      txHash: '0x' + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join('')
     };
 
     wallet.history.unshift(action);
@@ -93,11 +93,11 @@ export const api = {
     wallet.lockedCollateral += value;
 
     const action: ActionHistory = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).substring(2, 11),
       type: 'COLLATERAL_LOCK',
-      description: `Locked ${amount} tokens as collateral`,
+      description: `Locked ${amount} units as credit collateral`,
       timestamp: new Date().toISOString(),
-      txHash: '0x' + Math.random().toString(16).substr(2, 40)
+      txHash: '0x' + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join('')
     };
 
     wallet.history.unshift(action);
@@ -110,12 +110,12 @@ export const api = {
     wallet.stablecoinBalance -= amount;
 
     const action: ActionHistory = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).substring(2, 11),
       type: 'PAYMENT',
-      description: `Payment of ₹${amount.toLocaleString()} settled`,
+      description: `Utility payment of ₹${amount.toLocaleString()} settled via rail`,
       timestamp: new Date().toISOString(),
       amount: `₹${amount.toLocaleString()}`,
-      txHash: '0x' + Math.random().toString(16).substr(2, 40)
+      txHash: '0x' + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join('')
     };
 
     wallet.history.unshift(action);
