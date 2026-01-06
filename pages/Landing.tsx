@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, ShieldCheck, Layers, RefreshCcw, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Building2, ShieldCheck, Layers, RefreshCcw, ArrowRight, CheckCircle2, XCircle } from 'lucide-react';
 
 const Landing: React.FC = () => {
   return (
@@ -45,11 +45,10 @@ const Landing: React.FC = () => {
           </div>
         </div>
         
-        {/* Simple Flat Visual */}
         <div className="relative">
           <div className="w-full aspect-square bg-indigo-50 rounded-[3rem] relative overflow-hidden">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-indigo-600 rounded-3xl transform rotate-12 flex items-center justify-center">
-               <div className="w-4/5 h-4/5 bg-white rounded-2xl flex flex-col p-6 text-indigo-600">
+               <div className="w-4/5 h-4/5 bg-white rounded-2xl flex flex-col p-6 text-indigo-600 border-2 border-slate-100">
                   <div className="w-12 h-12 bg-indigo-50 rounded-lg mb-4 flex items-center justify-center">
                     <Building2 />
                   </div>
@@ -68,30 +67,53 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* Flat Pillars */}
-      <section className="max-w-7xl mx-auto px-8 py-32 border-t-2 border-slate-100">
-        <div className="grid md:grid-cols-3 gap-16">
-          <div className="space-y-6">
-            <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center text-indigo-600">
-              <ShieldCheck className="w-8 h-8" />
-            </div>
-            <h3 className="text-2xl font-black tracking-tight">Land Verification</h3>
-            <p className="text-slate-500 font-medium leading-relaxed">Every plot undergoes a 24-point legal audit including Bhoomi records and mutation verification.</p>
-          </div>
-          <div className="space-y-6">
-            <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center text-indigo-600">
-              <Layers className="w-8 h-8" />
-            </div>
-            <h3 className="text-2xl font-black tracking-tight">Fractionalized</h3>
-            <p className="text-slate-500 font-medium leading-relaxed">Own high-growth plots in metro periphery with as little as ₹5,000.</p>
-          </div>
-          <div className="space-y-6">
-            <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center text-indigo-600">
-              <RefreshCcw className="w-8 h-8" />
-            </div>
-            <h3 className="text-2xl font-black tracking-tight">Liquid Exit</h3>
-            <p className="text-slate-500 font-medium leading-relaxed">Unlike physical land sale, our tokens can be swapped or collateralized for instant liquidity.</p>
-          </div>
+      {/* Comparison Table Section */}
+      <section className="max-w-7xl mx-auto px-8 py-32 border-t-2 border-slate-100 bg-slate-50/50">
+        <div className="mb-20">
+          <h2 className="text-4xl font-black text-slate-900 tracking-tighter mb-4 uppercase">What we build that others don't</h2>
+          <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">Our Solution vs Existing Platforms</p>
+        </div>
+
+        <div className="overflow-hidden border-2 border-slate-200 rounded-2xl bg-white shadow-sm">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="bg-slate-900 text-white">
+                <th className="px-10 py-6 font-black uppercase tracking-widest text-xs">Capability</th>
+                <th className="px-10 py-6 font-black uppercase tracking-widest text-xs text-center border-l border-white/10">Existing Platforms</th>
+                <th className="px-10 py-6 font-black uppercase tracking-widest text-xs text-center border-l border-white/10 bg-indigo-600">Our Solution</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y-2 divide-slate-100">
+              {[
+                { cap: 'Asset verification', existing: true, solution: true },
+                { cap: 'Fractional ownership', existing: true, solution: true },
+                { cap: 'Rental yield', existing: 'some', solution: 'Optional' },
+                { cap: 'Instant swap to stablecoin', existing: false, solution: true },
+                { cap: 'Use as payment collateral', existing: false, solution: true },
+                { cap: 'End-to-end value rail', existing: false, solution: true, description: '(verify → tokenize → swap → pay)' },
+              ].map((row, i) => (
+                <tr key={i} className="hover:bg-slate-50 transition-colors">
+                  <td className="px-10 py-6">
+                    <p className="font-black text-slate-900 text-lg">{row.cap}</p>
+                    {row.description && <p className="text-xs font-bold text-slate-400 mt-1 uppercase tracking-widest">{row.description}</p>}
+                  </td>
+                  <td className="px-10 py-6 border-l border-slate-100">
+                    <div className="flex flex-col items-center justify-center gap-1">
+                      {row.existing === true ? <CheckCircle2 className="w-6 h-6 text-emerald-500" /> : 
+                       row.existing === false ? <XCircle className="w-6 h-6 text-red-400 opacity-30" /> :
+                       <div className="flex items-center gap-2"><CheckCircle2 className="w-5 h-5 text-emerald-500" /><span className="text-[10px] font-black text-slate-400 uppercase tracking-tight">{row.existing}</span></div>}
+                    </div>
+                  </td>
+                  <td className="px-10 py-6 border-l border-slate-100 bg-indigo-50/30">
+                    <div className="flex flex-col items-center justify-center gap-1">
+                      {row.solution === true ? <CheckCircle2 className="w-8 h-8 text-indigo-600" /> :
+                       <span className="text-sm font-black text-indigo-600 uppercase tracking-widest">{row.solution}</span>}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 

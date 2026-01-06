@@ -1,14 +1,15 @@
 
 import React, { useState, useMemo } from 'react';
-import { useAuth } from '../context/AuthContext';
-import StatCard from '../components/StatCard';
-import { Wallet, Layers, LineChart, ExternalLink, MapPin, Search, Filter } from 'lucide-react';
-import { DUMMY_ASSETS } from '../constants';
+import { useAuth } from '../context/AuthContext.tsx';
+import StatCard from '../components/StatCard.tsx';
+import { Wallet, Layers, LineChart, ExternalLink, MapPin, Search, X, Info } from 'lucide-react';
+import { DUMMY_ASSETS } from '../constants.tsx';
 
 const Dashboard: React.FC = () => {
   const { wallet } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [riskFilter, setRiskFilter] = useState('All');
+  const [showAddFunds, setShowAddFunds] = useState(false);
 
   const totalTokens = (Object.values(wallet.tokensByAsset) as number[]).reduce((a: number, b: number) => a + b, 0);
   const estYield = DUMMY_ASSETS.reduce((acc, asset) => {
@@ -37,7 +38,10 @@ const Dashboard: React.FC = () => {
           <h1 className="text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight">Dashboard</h1>
           <p className="text-slate-400 dark:text-slate-500 font-bold uppercase text-xs tracking-widest mt-1">Portfolio Overview</p>
         </div>
-        <button className="bg-indigo-600 text-white px-10 py-4 rounded-lg font-black uppercase tracking-widest text-sm hover:bg-slate-900 dark:hover:bg-slate-800 transition-colors btn-flat">
+        <button 
+          onClick={() => setShowAddFunds(true)}
+          className="bg-indigo-600 text-white px-10 py-4 rounded-lg font-black uppercase tracking-widest text-sm hover:bg-slate-900 dark:hover:bg-slate-800 transition-colors btn-flat"
+        >
           Add Funds
         </button>
       </div>
@@ -152,6 +156,34 @@ const Dashboard: React.FC = () => {
           </table>
         </div>
       </div>
+
+      {/* Add Funds Modal */}
+      {showAddFunds && (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-6 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl border-4 border-slate-900 dark:border-slate-800 p-8 relative overflow-hidden">
+            <button 
+              onClick={() => setShowAddFunds(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="w-16 h-16 bg-indigo-600 rounded-xl flex items-center justify-center text-white mb-6">
+              <Info className="w-8 h-8" />
+            </div>
+            <h2 className="text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight uppercase mb-4">Under Maintenance</h2>
+            <p className="text-slate-500 dark:text-slate-400 font-bold leading-relaxed mb-8">
+              The direct fiat-to-stablecoin gateway for Indian Banks is currently being integrated. 
+              Please contact support for manual over-the-counter (OTC) settlements.
+            </p>
+            <button 
+              onClick={() => setShowAddFunds(false)}
+              className="w-full bg-slate-900 dark:bg-slate-800 text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs btn-flat"
+            >
+              Acknowledge
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

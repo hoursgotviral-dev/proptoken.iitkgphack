@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { DUMMY_ASSETS } from '../constants';
-import { CreditCard, ShieldCheck, ShoppingBag, Lock, Info, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext.tsx';
+import { DUMMY_ASSETS } from '../constants.tsx';
+import { CreditCard, ShieldCheck, ShoppingBag, Lock, Info, AlertCircle, Loader2, CheckCircle2, X } from 'lucide-react';
 
 const Pay: React.FC = () => {
   const { wallet, makePayment, lockAsCollateral } = useAuth();
@@ -12,6 +12,7 @@ const Pay: React.FC = () => {
   const [lockAmount, setLockAmount] = useState<number>(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showNotice, setShowNotice] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handlePay = async () => {
@@ -36,18 +37,7 @@ const Pay: React.FC = () => {
 
   const handleLock = async () => {
     if (lockAmount <= 0) return;
-    setIsProcessing(true);
-    setError(null);
-    try {
-      await lockAsCollateral(lockAssetId, lockAmount);
-      setShowSuccess(true);
-      setLockAmount(0);
-      setTimeout(() => setShowSuccess(false), 3000);
-    } catch (err: any) {
-      setError(err.message || 'Collateralization failed');
-    } finally {
-      setIsProcessing(false);
-    }
+    setShowNotice(true); // Redirect to notice for now
   };
 
   const selectedLockAsset = DUMMY_ASSETS.find(a => a.id === lockAssetId)!;
@@ -223,6 +213,34 @@ const Pay: React.FC = () => {
         <div className="fixed bottom-10 right-10 bg-emerald-500 text-white px-10 py-5 rounded-xl shadow-2xl flex items-center gap-4 animate-in fade-in slide-in-from-right-10 duration-300 z-50">
           <CheckCircle2 className="w-8 h-8" />
           <span className="font-black uppercase tracking-widest text-sm">Protocol Update Successful</span>
+        </div>
+      )}
+
+      {/* Feature Notice Modal */}
+      {showNotice && (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-6 animate-in zoom-in duration-200">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl border-4 border-slate-900 dark:border-slate-800 p-8 relative">
+            <button 
+              onClick={() => setShowNotice(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="w-16 h-16 bg-amber-500 rounded-xl flex items-center justify-center text-white mb-6">
+              <ShieldCheck className="w-8 h-8" />
+            </div>
+            <h2 className="text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight uppercase mb-4">Security Audit</h2>
+            <p className="text-slate-500 dark:text-slate-400 font-bold leading-relaxed mb-8">
+              The Peer-to-Peer lending pool for collateralized credit is undergoing a Level 3 security audit by CertiK. 
+              Liquidity pools will open once the audit report is finalized.
+            </p>
+            <button 
+              onClick={() => setShowNotice(false)}
+              className="w-full bg-slate-900 dark:bg-slate-800 text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs btn-flat"
+            >
+              Close
+            </button>
+          </div>
         </div>
       )}
     </div>

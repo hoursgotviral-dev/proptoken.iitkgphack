@@ -14,6 +14,7 @@ import Yield from './pages/Yield.tsx';
 import Swap from './pages/Swap.tsx';
 import Pay from './pages/Pay.tsx';
 import Account from './pages/Account.tsx';
+import PropAI from './pages/PropAI.tsx';
 
 // Components
 import Layout from './components/Layout.tsx';
@@ -40,6 +41,7 @@ const App: React.FC = () => {
           <Route path="/swap" element={<ProtectedRoute><Swap /></ProtectedRoute>} />
           <Route path="/pay" element={<ProtectedRoute><Pay /></ProtectedRoute>} />
           <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
+          <Route path="/ai" element={<ProtectedRoute><PropAI /></ProtectedRoute>} />
           
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

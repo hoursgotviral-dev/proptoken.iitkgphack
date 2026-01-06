@@ -1,11 +1,12 @@
 
-import React from 'react';
-import { useAuth } from '../context/AuthContext';
-import { User, Mail, Calendar, Layers, Wallet, Clock, ArrowRight, ShieldCheck, CreditCard, RefreshCcw, ShoppingCart, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext.tsx';
+import { User, Mail, Calendar, Layers, Wallet, Clock, ArrowRight, ShieldCheck, CreditCard, RefreshCcw, ShoppingCart, ExternalLink, X, Info } from 'lucide-react';
 import { format } from 'date-fns';
 
 const Account: React.FC = () => {
   const { user, wallet } = useAuth();
+  const [showUpdateNotice, setShowUpdateNotice] = useState(false);
 
   const totalTokens = (Object.values(wallet.tokensByAsset) as number[]).reduce((a: number, b: number) => a + b, 0);
   const totalAssets = (Object.values(wallet.tokensByAsset) as number[]).filter((count: number) => count > 0).length;
@@ -45,7 +46,10 @@ const Account: React.FC = () => {
             )}
 
             <div className="w-full h-[2px] bg-slate-100 dark:bg-slate-800 my-8"></div>
-            <button className="w-full py-4 bg-slate-900 dark:bg-slate-800 text-white rounded-lg font-black uppercase tracking-widest text-xs hover:bg-indigo-600 transition-colors btn-flat">
+            <button 
+              onClick={() => setShowUpdateNotice(true)}
+              className="w-full py-4 bg-slate-900 dark:bg-slate-800 text-white rounded-lg font-black uppercase tracking-widest text-xs hover:bg-indigo-600 transition-colors btn-flat"
+            >
               Update Identity
             </button>
           </div>
@@ -123,6 +127,34 @@ const Account: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Update Identity Modal */}
+      {showUpdateNotice && (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-6 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl border-4 border-slate-900 dark:border-slate-800 p-8 relative overflow-hidden">
+            <button 
+              onClick={() => setShowUpdateNotice(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="w-16 h-16 bg-slate-900 dark:bg-slate-800 rounded-xl flex items-center justify-center text-white mb-6">
+              <User className="w-8 h-8" />
+            </div>
+            <h2 className="text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight uppercase mb-4">Identity Locked</h2>
+            <p className="text-slate-500 dark:text-slate-400 font-bold leading-relaxed mb-8">
+              Profile modifications are temporarily disabled during the initial 30-day "Smart Account" validation period. 
+              This ensures compliance with SEBI and RBI digital asset guidelines.
+            </p>
+            <button 
+              onClick={() => setShowUpdateNotice(false)}
+              className="w-full bg-slate-900 dark:bg-slate-800 text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs btn-flat"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
