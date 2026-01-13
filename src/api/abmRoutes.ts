@@ -147,7 +147,8 @@ router.get('/submissions', (req: Request, res: Response) => {
 
 // Get submission by ID
 router.get('/submissions/:id', (req: Request, res: Response) => {
-  const submission = getSubmission(req.params.id);
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const submission = getSubmission(id);
   
   if (!submission) {
     return (res as any).status(404).json({
@@ -161,7 +162,8 @@ router.get('/submissions/:id', (req: Request, res: Response) => {
 
 // Get submission progress
 router.get('/submissions/:id/progress', (req: Request, res: Response) => {
-  const progress = getProgress(req.params.id);
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const progress = getProgress(id);
   
   if (!progress) {
     return (res as any).status(404).json({
@@ -175,7 +177,8 @@ router.get('/submissions/:id/progress', (req: Request, res: Response) => {
 
 // Get full verification result
 router.get('/submissions/:id/full', (req: Request, res: Response) => {
-  const result = getFullVerificationResult(req.params.id);
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const result = getFullVerificationResult(id);
   
   if (!result) {
     return (res as any).status(404).json({
