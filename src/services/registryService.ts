@@ -13,6 +13,8 @@ import {
 import { OracleVerificationResult, runOracleVerification } from './oracleService';
 import { runABMAnalysis } from './abmService';
 import { runFraudDetection } from './fraudService';
+import { runEnhancedFraudDetection } from './enhancedFraudService';
+import { runProductionOracle, ProductionOracleResult } from './productionOracleService';
 import { calculateConsensus } from './consensusService';
 import crypto from 'crypto';
 
@@ -22,6 +24,7 @@ import crypto from 'crypto';
 
 const submissions: Map<string, AssetSubmission> = new Map();
 const oracleResults: Map<string, OracleVerificationResult> = new Map();
+const productionOracleResults: Map<string, ProductionOracleResult> = new Map();
 const abmResults: Map<string, ABMAnalysis> = new Map();
 const fraudResults: Map<string, FraudAnalysis> = new Map();
 const consensusResults: Map<string, ConsensusScore> = new Map();
