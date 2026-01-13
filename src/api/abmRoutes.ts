@@ -13,6 +13,7 @@ import {
   claimCashFlowExposure,
   getFullVerificationResult,
   getOracleResult,
+  getProductionOracleResult,
   getABMResult,
   getFraudResult,
   getConsensusResult
