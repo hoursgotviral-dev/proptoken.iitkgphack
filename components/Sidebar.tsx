@@ -9,7 +9,8 @@ import {
   RefreshCcw, 
   CreditCard, 
   UserCircle,
-  Building2
+  Building2,
+  Brain
 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
@@ -17,6 +18,7 @@ const Sidebar: React.FC = () => {
   
   const menuItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'ABM Intelligence', path: '/abm', icon: Brain },
     { name: 'Verify Asset', path: '/verify', icon: ShieldCheck },
     { name: 'Fractional', path: '/fractional', icon: Layers },
     { name: 'Yields', path: '/yield', icon: TrendingUp },
