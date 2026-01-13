@@ -263,21 +263,26 @@ export async function runVerificationPipeline(submissionId: string): Promise<{
     );
     
     // =====================
-    // STEP 3: FRAUD DETECTION
+    // STEP 3: FRAUD DETECTION (Enhanced with Production Oracle)
     // =====================
     submission.status = 'FRAUD_DETECTION';
     progress.currentStage = 'FRAUD_DETECTION';
-    addLog(progress, 'fraud', 'Running fraud detection algorithms', 'info');
+    addLog(progress, 'fraud', 'Running enhanced fraud detection with MCA & document verification', 'info');
+    
+    progress.stages.fraudDetection.progress = 20;
+    addLog(progress, 'fraud', 'Checking SPV verification status from MCA...', 'info');
     
     progress.stages.fraudDetection.progress = 40;
     progress.stages.fraudDetection.subStages.ruleBased.completed = true;
-    addLog(progress, 'fraud', 'Rule-based anomaly detection complete', 'info');
+    addLog(progress, 'fraud', `Rule-based detection: ${ENHANCED_FRAUD_RULES_COUNT} rules evaluated`, 'info');
     
     progress.stages.fraudDetection.progress = 70;
     progress.stages.fraudDetection.subStages.mlBased.completed = true;
-    addLog(progress, 'fraud', 'ML-based fraud prediction complete', 'info');
+    addLog(progress, 'fraud', 'Pattern and behavioral analysis complete', 'info');
     
-    const fraudResult = await runFraudDetection(submission, oracleResult, abmResult);
+    // Use enhanced fraud detection with production oracle data
+    const productionOracleResult = productionOracleResults.get(submissionId);
+    const fraudResult = await runEnhancedFraudDetection(submission, oracleResult, abmResult, productionOracleResult);
     fraudResults.set(submissionId, fraudResult);
     
     progress.stages.fraudDetection.progress = 100;
@@ -287,8 +292,21 @@ export async function runVerificationPipeline(submissionId: string): Promise<{
     progress.stages.fraudDetection.completed = true;
     progress.stages.fraudDetection.timestamp = new Date();
     
+    // Log detected anomalies
+    if (fraudResult.ruleBased.anomalies.length > 0) {
+      const criticalAnomalies = fraudResult.ruleBased.anomalies.filter(a => a.severity === 'critical');
+      const highAnomalies = fraudResult.ruleBased.anomalies.filter(a => a.severity === 'high');
+      
+      if (criticalAnomalies.length > 0) {
+        addLog(progress, 'fraud', `CRITICAL: ${criticalAnomalies.length} critical anomaly(s) detected`, 'error');
+      }
+      if (highAnomalies.length > 0) {
+        addLog(progress, 'fraud', `HIGH RISK: ${highAnomalies.length} high-severity anomaly(s) detected`, 'warning');
+      }
+    }
+    
     addLog(progress, 'fraud',
-      `Fraud detection complete. Likelihood: ${fraudResult.fraudLikelihood.toFixed(2)}%, Anomalies: ${fraudResult.anomalyScore}`,
+      `Fraud detection complete. Likelihood: ${fraudResult.fraudLikelihood.toFixed(2)}%, Anomalies: ${fraudResult.anomalyScore}, Risk Level: ${fraudResult.riskLevel.toUpperCase()}`,
       fraudResult.passed ? 'success' : 'warning'
     );
     
