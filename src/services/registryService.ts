@@ -510,6 +510,10 @@ export function getOracleResult(submissionId: string): OracleVerificationResult 
   return oracleResults.get(submissionId);
 }
 
+export function getProductionOracleResult(submissionId: string): ProductionOracleResult | undefined {
+  return productionOracleResults.get(submissionId);
+}
+
 export function getABMResult(submissionId: string): ABMAnalysis | undefined {
   return abmResults.get(submissionId);
 }
@@ -530,6 +534,7 @@ export interface FullVerificationResult {
   submission: AssetSubmission;
   progress: VerificationProgress;
   oracle?: OracleVerificationResult;
+  productionOracle?: ProductionOracleResult;
   abm?: ABMAnalysis;
   fraud?: FraudAnalysis;
   consensus?: ConsensusScore;
