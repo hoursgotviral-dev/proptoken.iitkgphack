@@ -105,6 +105,26 @@ export default function AssetSubmissionForm() {
                         onChange={(e) => handleChange('location', 'country', e.target.value)}
                     />
                 </div>
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div className="col-span-1">
+                        <label className="block text-xs text-gray-500 mb-1">Latitude</label>
+                        <input
+                            type="number" step="0.000001" placeholder="e.g. 28.4595"
+                            className="w-full rounded border p-2"
+                            value={formData.location.coordinates.lat}
+                            onChange={(e) => handleChange('location', 'coordinates', { ...formData.location.coordinates, lat: parseFloat(e.target.value) })}
+                        />
+                    </div>
+                    <div className="col-span-1">
+                        <label className="block text-xs text-gray-500 mb-1">Longitude</label>
+                        <input
+                            type="number" step="0.000001" placeholder="e.g. 77.0266"
+                            className="w-full rounded border p-2"
+                            value={formData.location.coordinates.lng}
+                            onChange={(e) => handleChange('location', 'coordinates', { ...formData.location.coordinates, lng: parseFloat(e.target.value) })}
+                        />
+                    </div>
+                </div>
             </div>
 
             {/* Financials */}

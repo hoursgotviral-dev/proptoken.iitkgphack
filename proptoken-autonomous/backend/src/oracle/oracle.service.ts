@@ -22,7 +22,17 @@ export class OracleService {
         this.logger.log(`Verifying submission: ${submission.id}`);
 
         const { location, registryIds, ownerName, address } = submission;
-        const coordinates = location?.coordinates || [28.4949, 77.0887];
+
+        // Handle both array and object formats for coordinates
+        let coordinates: [number, number] = [28.4949, 77.0887]; // Default
+
+        if (location?.coordinates) {
+            if (Array.isArray(location.coordinates)) {
+                coordinates = location.coordinates as [number, number];
+            } else if (typeof location.coordinates === 'object') {
+                coordinates = [location.coordinates.lat, location.coordinates.lng];
+            }
+        }
         const city = location?.city || 'Gurugram';
         const mainRegistryId = registryIds?.[0] || 'REG-GGM-12345';
         const normalizedOwner = ownerName || submission.did || 'ABC Realty Pvt Ltd';
