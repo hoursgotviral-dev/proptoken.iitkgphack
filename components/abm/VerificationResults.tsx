@@ -4,8 +4,8 @@ import {
   DollarSign, BarChart3, PieChart, ArrowUpRight, ArrowDownRight,
   FileText, MapPin, Building2, Users, ExternalLink, Copy
 } from 'lucide-react';
-import { getFullVerificationResult } from '../abmApi';
-import { ConsensusScore, EligibleAsset } from '../abmTypes';
+import { getFullVerificationResult } from "../../abmApi";
+import { ConsensusScore, EligibleAsset } from "../../abmTypes";
 
 interface Props {
   submissionId: string;
@@ -68,11 +68,10 @@ const VerificationResults: React.FC<Props> = ({ submissionId, onBack }) => {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
-      <div className={`rounded-xl p-8 ${
-        isEligible 
+      <div className={`rounded-xl p-8 ${isEligible
           ? 'bg-gradient-to-r from-emerald-600 to-emerald-500'
           : 'bg-gradient-to-r from-red-600 to-red-500'
-      } text-white`}>
+        } text-white`}>
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center gap-3 mb-4">
@@ -86,7 +85,7 @@ const VerificationResults: React.FC<Props> = ({ submissionId, onBack }) => {
                   {isEligible ? 'Asset Eligible' : 'Asset Rejected'}
                 </h1>
                 <p className="text-white/80">
-                  {isEligible 
+                  {isEligible
                     ? 'Ready for tokenization'
                     : consensus?.rejectionReason || 'Did not meet eligibility criteria'
                   }
@@ -114,11 +113,10 @@ const VerificationResults: React.FC<Props> = ({ submissionId, onBack }) => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-6 py-3 font-bold text-sm uppercase tracking-wider transition-colors ${
-              activeTab === tab
+            className={`px-6 py-3 font-bold text-sm uppercase tracking-wider transition-colors ${activeTab === tab
                 ? 'text-indigo-600 border-b-2 border-indigo-600'
                 : 'text-slate-500 hover:text-slate-700 dark:text-slate-400'
-            }`}
+              }`}
           >
             {tab}
           </button>
@@ -361,22 +359,20 @@ const VerificationResults: React.FC<Props> = ({ submissionId, onBack }) => {
       {activeTab === 'fraud' && fraud && (
         <div className="space-y-6">
           {/* Fraud Summary */}
-          <div className={`rounded-xl p-6 ${
-            fraud.fraudLikelihood <= 5 
+          <div className={`rounded-xl p-6 ${fraud.fraudLikelihood <= 5
               ? 'bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-200 dark:border-emerald-800'
               : fraud.fraudLikelihood <= 20
                 ? 'bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-800'
                 : 'bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800'
-          }`}>
+            }`}>
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-black text-slate-900 dark:text-white">Fraud Analysis</h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400">Risk Level: {fraud.riskLevel.toUpperCase()}</p>
               </div>
               <div className="text-right">
-                <p className={`text-4xl font-black ${
-                  fraud.fraudLikelihood <= 5 ? 'text-emerald-600' : fraud.fraudLikelihood <= 20 ? 'text-amber-600' : 'text-red-600'
-                }`}>
+                <p className={`text-4xl font-black ${fraud.fraudLikelihood <= 5 ? 'text-emerald-600' : fraud.fraudLikelihood <= 20 ? 'text-amber-600' : 'text-red-600'
+                  }`}>
                   {fraud.fraudLikelihood.toFixed(2)}%
                 </p>
                 <p className="text-sm text-slate-500">Fraud Likelihood</p>
@@ -390,18 +386,16 @@ const VerificationResults: React.FC<Props> = ({ submissionId, onBack }) => {
               <h3 className="text-lg font-black text-slate-900 dark:text-white mb-4">Detected Anomalies</h3>
               <div className="space-y-3">
                 {fraud.ruleBased.anomalies.map((anomaly: any, index: number) => (
-                  <div key={index} className={`p-4 rounded-lg border ${
-                    anomaly.severity === 'critical' ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800' :
-                    anomaly.severity === 'high' ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800' :
-                    'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700'
-                  }`}>
+                  <div key={index} className={`p-4 rounded-lg border ${anomaly.severity === 'critical' ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800' :
+                      anomaly.severity === 'high' ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800' :
+                        'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700'
+                    }`}>
                     <div className="flex items-start justify-between">
                       <div>
-                        <span className={`text-xs font-bold uppercase px-2 py-1 rounded ${
-                          anomaly.severity === 'critical' ? 'bg-red-200 text-red-800' :
-                          anomaly.severity === 'high' ? 'bg-amber-200 text-amber-800' :
-                          'bg-slate-200 text-slate-700'
-                        }`}>
+                        <span className={`text-xs font-bold uppercase px-2 py-1 rounded ${anomaly.severity === 'critical' ? 'bg-red-200 text-red-800' :
+                            anomaly.severity === 'high' ? 'bg-amber-200 text-amber-800' :
+                              'bg-slate-200 text-slate-700'
+                          }`}>
                           {anomaly.severity}
                         </span>
                         <p className="mt-2 font-medium text-slate-900 dark:text-white">{anomaly.detail}</p>

@@ -72,7 +72,7 @@ function addLog(
 
 export function createSubmission(data: Omit<AssetSubmission, 'id' | 'status' | 'createdAt' | 'updatedAt'>): AssetSubmission {
   const id = `SUB-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
-  
+
   const submission: AssetSubmission = {
     ...data,
     id,
@@ -80,9 +80,9 @@ export function createSubmission(data: Omit<AssetSubmission, 'id' | 'status' | '
     createdAt: new Date(),
     updatedAt: new Date()
   };
-  
+
   submissions.set(id, submission);
-  
+
   // Initialize progress tracking
   const progress: VerificationProgress = {
     submissionId: id,
@@ -124,10 +124,10 @@ export function createSubmission(data: Omit<AssetSubmission, 'id' | 'status' | '
     },
     logs: []
   };
-  
+
   addLog(progress, 'submission', 'Asset submission received and validated', 'success');
   progressTracking.set(id, progress);
-  
+
   return submission;
 }
 
@@ -159,9 +159,9 @@ export async function runVerificationPipeline(submissionId: string): Promise<{
   if (!submission) {
     return { success: false, error: 'Submission not found' };
   }
-  
+
   const progress = progressTracking.get(submissionId)!;
-  
+
   try {
     // =====================
     // STEP 0: PRODUCTION ORACLE (Document & MCA Verification)
@@ -169,57 +169,57 @@ export async function runVerificationPipeline(submissionId: string): Promise<{
     addLog(progress, 'production', 'Starting Production Oracle verification...', 'info');
     addLog(progress, 'production', 'Verifying document URLs accessibility...', 'info');
     addLog(progress, 'production', 'Running MCA (Ministry of Corporate Affairs) verification...', 'info');
-    
+
     const productionOracleResult = await runProductionOracle(submission);
     productionOracleResults.set(submissionId, productionOracleResult);
-    
-    addLog(progress, 'production', 
+
+    addLog(progress, 'production',
       `Document verification: ${productionOracleResult.documentScore.toFixed(0)}% accessible`,
       productionOracleResult.documentScore >= 70 ? 'success' : 'warning'
     );
-    addLog(progress, 'production', 
+    addLog(progress, 'production',
       `MCA verification: ${productionOracleResult.mcaVerification.found ? 'Company found' : 'Company NOT found'} - Score: ${productionOracleResult.mcaScore.toFixed(0)}%`,
       productionOracleResult.mcaScore >= 60 ? 'success' : 'warning'
     );
-    
+
     if (productionOracleResult.criticalIssues.length > 0) {
-      productionOracleResult.criticalIssues.forEach(issue => 
+      productionOracleResult.criticalIssues.forEach(issue =>
         addLog(progress, 'production', `CRITICAL: ${issue}`, 'error')
       );
     }
     if (productionOracleResult.warnings.length > 0) {
-      productionOracleResult.warnings.slice(0, 3).forEach(issue => 
+      productionOracleResult.warnings.slice(0, 3).forEach(issue =>
         addLog(progress, 'production', `WARNING: ${issue}`, 'warning')
       );
     }
-    
+
     // =====================
     // STEP 1: ORACLE VERIFICATION
     // =====================
     submission.status = 'ORACLE_VERIFICATION';
     progress.currentStage = 'ORACLE_VERIFICATION';
     addLog(progress, 'oracle', 'Starting Oracle Truth Layer verification', 'info');
-    
+
     // Simulate progressive updates
     progress.stages.oracleVerification.progress = 20;
     progress.stages.oracleVerification.subStages.satellite.completed = true;
     addLog(progress, 'oracle', 'Satellite imagery analysis complete', 'info');
-    
+
     progress.stages.oracleVerification.progress = 40;
     progress.stages.oracleVerification.subStages.registry.completed = true;
     addLog(progress, 'oracle', 'Property registry verification complete', 'info');
-    
+
     progress.stages.oracleVerification.progress = 60;
     progress.stages.oracleVerification.subStages.vision.completed = true;
     addLog(progress, 'oracle', 'Computer vision analysis complete', 'info');
-    
+
     progress.stages.oracleVerification.progress = 80;
     progress.stages.oracleVerification.subStages.activity.completed = true;
     addLog(progress, 'oracle', 'Activity signals verified', 'info');
-    
+
     const oracleResult = await runOracleVerification(submission);
     oracleResults.set(submissionId, oracleResult);
-    
+
     progress.stages.oracleVerification.progress = 100;
     progress.stages.oracleVerification.subStages.ownership.completed = true;
     progress.stages.oracleVerification.subStages.ownership.score = oracleResult.ownership.aggregatedProbability;
@@ -229,77 +229,77 @@ export async function runVerificationPipeline(submissionId: string): Promise<{
     progress.stages.oracleVerification.subStages.activity.score = oracleResult.activityScore;
     progress.stages.oracleVerification.completed = true;
     progress.stages.oracleVerification.timestamp = new Date();
-    
-    addLog(progress, 'oracle', 
+
+    addLog(progress, 'oracle',
       `Oracle verification complete. Existence: ${(oracleResult.existence.aggregatedScore * 100).toFixed(1)}%, Ownership: ${(oracleResult.ownership.aggregatedProbability * 100).toFixed(1)}%`,
       oracleResult.passed ? 'success' : 'warning'
     );
-    
+
     // =====================
     // STEP 2: ABM ANALYSIS
     // =====================
     submission.status = 'ABM_ANALYSIS';
     progress.currentStage = 'ABM_ANALYSIS';
     addLog(progress, 'abm', 'Starting ABM Market Intelligence analysis', 'info');
-    
+
     progress.stages.abmAnalysis.progress = 30;
     progress.stages.abmAnalysis.subStages.marketIntelligence.completed = true;
     addLog(progress, 'abm', 'Market comparables analysis complete', 'info');
-    
+
     progress.stages.abmAnalysis.progress = 60;
     progress.stages.abmAnalysis.subStages.cashFlowSimulation.completed = true;
     addLog(progress, 'abm', 'Monte Carlo cash flow simulation complete (10,000 runs)', 'info');
-    
+
     const abmResult = await runABMAnalysis(submission, oracleResult);
     abmResults.set(submissionId, abmResult);
-    
+
     progress.stages.abmAnalysis.progress = 100;
     progress.stages.abmAnalysis.subStages.riskSimulation.completed = true;
     progress.stages.abmAnalysis.subStages.riskSimulation.score = 100 - abmResult.overallRiskScore;
     progress.stages.abmAnalysis.subStages.marketIntelligence.score = abmResult.marketFitScore;
     progress.stages.abmAnalysis.completed = true;
     progress.stages.abmAnalysis.timestamp = new Date();
-    
+
     addLog(progress, 'abm',
       `ABM analysis complete. NAV: ₹${abmResult.nav.meanNAV.toLocaleString()}, Risk: ${abmResult.overallRiskScore}%`,
       abmResult.passed ? 'success' : 'warning'
     );
-    
+
     // =====================
     // STEP 3: FRAUD DETECTION (Enhanced with Production Oracle)
     // =====================
     submission.status = 'FRAUD_DETECTION';
     progress.currentStage = 'FRAUD_DETECTION';
     addLog(progress, 'fraud', 'Running enhanced fraud detection with MCA & document verification', 'info');
-    
+
     progress.stages.fraudDetection.progress = 20;
     addLog(progress, 'fraud', 'Checking SPV verification status from MCA...', 'info');
-    
+
     progress.stages.fraudDetection.progress = 40;
     progress.stages.fraudDetection.subStages.ruleBased.completed = true;
     addLog(progress, 'fraud', `Rule-based detection: ${ENHANCED_FRAUD_RULES_COUNT} rules evaluated`, 'info');
-    
+
     progress.stages.fraudDetection.progress = 70;
     progress.stages.fraudDetection.subStages.mlBased.completed = true;
     addLog(progress, 'fraud', 'Pattern and behavioral analysis complete', 'info');
-    
+
     // Use enhanced fraud detection with production oracle data
-    const productionOracleResult = productionOracleResults.get(submissionId);
-    const fraudResult = await runEnhancedFraudDetection(submission, oracleResult, abmResult, productionOracleResult);
+    const existingProductionOracleResult = productionOracleResults.get(submissionId);
+    const fraudResult = await runEnhancedFraudDetection(submission, oracleResult, abmResult, existingProductionOracleResult);
     fraudResults.set(submissionId, fraudResult);
-    
+
     progress.stages.fraudDetection.progress = 100;
     progress.stages.fraudDetection.subStages.patterns.completed = true;
     progress.stages.fraudDetection.subStages.ruleBased.anomalies = fraudResult.ruleBased.anomalies.length;
     progress.stages.fraudDetection.subStages.mlBased.score = (1 - fraudResult.mlBased.xgboostFraudProb) * 100;
     progress.stages.fraudDetection.completed = true;
     progress.stages.fraudDetection.timestamp = new Date();
-    
+
     // Log detected anomalies
     if (fraudResult.ruleBased.anomalies.length > 0) {
       const criticalAnomalies = fraudResult.ruleBased.anomalies.filter(a => a.severity === 'critical');
       const highAnomalies = fraudResult.ruleBased.anomalies.filter(a => a.severity === 'high');
-      
+
       if (criticalAnomalies.length > 0) {
         addLog(progress, 'fraud', `CRITICAL: ${criticalAnomalies.length} critical anomaly(s) detected`, 'error');
       }
@@ -307,19 +307,19 @@ export async function runVerificationPipeline(submissionId: string): Promise<{
         addLog(progress, 'fraud', `HIGH RISK: ${highAnomalies.length} high-severity anomaly(s) detected`, 'warning');
       }
     }
-    
+
     addLog(progress, 'fraud',
       `Fraud detection complete. Likelihood: ${fraudResult.fraudLikelihood.toFixed(2)}%, Anomalies: ${fraudResult.anomalyScore}, Risk Level: ${fraudResult.riskLevel.toUpperCase()}`,
       fraudResult.passed ? 'success' : 'warning'
     );
-    
+
     // =====================
     // STEP 4: CONSENSUS SCORING
     // =====================
     submission.status = 'CONSENSUS_SCORING';
     progress.currentStage = 'CONSENSUS_SCORING';
     addLog(progress, 'consensus', 'Calculating consensus score', 'info');
-    
+
     const consensusResult = calculateConsensus({
       submission,
       oracle: oracleResult,
@@ -327,28 +327,28 @@ export async function runVerificationPipeline(submissionId: string): Promise<{
       fraud: fraudResult
     });
     consensusResults.set(submissionId, consensusResult);
-    
+
     progress.stages.consensusScoring.completed = true;
     progress.stages.consensusScoring.timestamp = new Date();
     progress.stages.consensusScoring.eligible = consensusResult.eligible;
     progress.stages.consensusScoring.confidence = consensusResult.confidence;
-    
+
     // =====================
     // FINAL DECISION
     // =====================
     if (consensusResult.eligible) {
       submission.status = 'ELIGIBLE';
       progress.currentStage = 'ELIGIBLE';
-      addLog(progress, 'consensus', 
+      addLog(progress, 'consensus',
         `Asset ELIGIBLE for tokenization. Confidence: ${(consensusResult.confidence * 100).toFixed(1)}%`,
         'success'
       );
-      
+
       // Create eligible asset entry
       const eligibleAsset = createEligibleAsset(
         submission, oracleResult, abmResult, fraudResult, consensusResult
       );
-      
+
       addLog(progress, 'registry',
         `Asset registered in Eligible Asset Registry. ID: ${eligibleAsset.id}`,
         'success'
@@ -361,22 +361,22 @@ export async function runVerificationPipeline(submissionId: string): Promise<{
         'error'
       );
     }
-    
+
     submission.updatedAt = new Date();
     submissions.set(submissionId, submission);
-    
+
     return {
       success: true,
       eligible: consensusResult.eligible,
       consensus: consensusResult
     };
-    
+
   } catch (error) {
     addLog(progress, 'error', `Pipeline error: ${error}`, 'error');
     submission.status = 'REJECTED';
     submission.updatedAt = new Date();
     submissions.set(submissionId, submission);
-    
+
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error'
@@ -396,11 +396,11 @@ function createEligibleAsset(
   consensus: ConsensusScore
 ): EligibleAsset {
   const id = `ASSET-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
-  
+
   // Calculate token economics
   const totalTokenSupply = Math.floor(abm.nav.meanNAV / 1000); // 1 token = ₹1000
   const tokenPrice = 1000;
-  
+
   const eligibleAsset: EligibleAsset = {
     id,
     submissionId: submission.id,
@@ -433,7 +433,7 @@ function createEligibleAsset(
     eligibilityTimestamp: new Date(),
     lastUpdated: new Date()
   };
-  
+
   eligibleAssets.set(id, eligibleAsset);
   return eligibleAsset;
 }
@@ -465,19 +465,19 @@ export function claimCashFlowExposure(
   if (!asset) {
     return { success: false, error: 'Asset not found' };
   }
-  
+
   if (tokensToAcquire > asset.availableTokens) {
     return { success: false, error: `Insufficient tokens. Available: ${asset.availableTokens}` };
   }
-  
+
   // Calculate exposure
   const percentageExposure = (tokensToAcquire / asset.totalTokenSupply) * 100;
   const monthlyYield = asset.expectedYield.expected / 100 / 12;
   const expectedMonthlyCF = (tokensToAcquire * asset.tokenPrice) * monthlyYield;
-  
+
   // Check if claimant already has a position
   const existingClaim = asset.cashFlowClaims.find(c => c.claimantId === claimantId);
-  
+
   if (existingClaim) {
     // Update existing claim
     existingClaim.tokensOwned += tokensToAcquire;
@@ -492,13 +492,13 @@ export function claimCashFlowExposure(
       expectedMonthlyCF: Math.round(expectedMonthlyCF)
     });
   }
-  
+
   asset.availableTokens -= tokensToAcquire;
   asset.lastUpdated = new Date();
   eligibleAssets.set(assetId, asset);
-  
+
   const claim = asset.cashFlowClaims.find(c => c.claimantId === claimantId)!;
-  
+
   return { success: true, claim };
 }
 
@@ -544,7 +544,7 @@ export interface FullVerificationResult {
 export function getFullVerificationResult(submissionId: string): FullVerificationResult | null {
   const submission = submissions.get(submissionId);
   if (!submission) return null;
-  
+
   return {
     submission,
     progress: progressTracking.get(submissionId)!,

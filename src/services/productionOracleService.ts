@@ -46,7 +46,7 @@ export async function verifyDocumentUrl(url: string): Promise<DocumentVerificati
     // For production: Make HEAD request to verify accessibility
     // Simulating response for demo (real implementation would use fetch)
     const isAccessible = Math.random() > 0.1; // 90% accessible
-    
+
     if (!isAccessible) {
       return {
         url,
@@ -189,14 +189,14 @@ export interface MCAVerificationResult {
 export async function verifyWithMCA(spv: AssetSubmission['spv']): Promise<MCAVerificationResult> {
   const cin = spv.spvRegistrationNumber;
   const companyName = spv.spvName;
-  
+
   // Validate CIN format (Indian Company Identification Number)
   // Format: U/L + 5 digit NIC code + 2 letter state code + 4 digit year + 3 letter (PTC/PLC/GOI etc) + 6 digit serial
   const cinRegex = /^[UL]\d{5}[A-Z]{2}\d{4}[A-Z]{3}\d{6}$/;
   const llpinRegex = /^[A-Z]{3}-\d{4}$/; // LLP format
-  
+
   const isValidCIN = cinRegex.test(cin) || llpinRegex.test(cin) || cin.startsWith('CIN');
-  
+
   if (!isValidCIN) {
     // Still try to verify but flag the format issue
     console.log(`Warning: CIN format may be invalid: ${cin}`);
@@ -207,9 +207,9 @@ export async function verifyWithMCA(spv: AssetSubmission['spv']): Promise<MCAVer
   // - Tofler
   // - Zaubacorp
   // - MCA21 Direct API (requires registration)
-  
+
   const found = Math.random() > 0.15; // 85% found rate
-  
+
   if (!found) {
     return {
       found: false,
@@ -235,7 +235,7 @@ export async function verifyWithMCA(spv: AssetSubmission['spv']): Promise<MCAVer
   const isActive = Math.random() > 0.1; // 90% active
   const hasCharges = Math.random() > 0.6; // 40% have charges
   const returnsUpToDate = Math.random() > 0.2; // 80% up to date
-  
+
   // Check name similarity
   const nameSimilarity = calculateStringSimilarity(
     companyName.toLowerCase(),
@@ -372,9 +372,9 @@ export async function extractDocumentData(
   try {
     // Simulate document extraction
     // In production: Download document, use OpenAI Vision API or Gemini for OCR
-    
+
     const extractionSuccess = Math.random() > 0.15; // 85% success rate
-    
+
     if (!extractionSuccess) {
       return {
         url,
@@ -492,7 +492,7 @@ export function crossCheckWithRegistry(
 ): RegistryCrossCheckResult {
   const matches: RegistryCrossCheckResult['matches'] = [];
   const issues: string[] = [];
-  
+
   // Check SPV name against MCA
   if (mcaResult.found && mcaResult.data) {
     const nameSimilarity = calculateStringSimilarity(
@@ -520,10 +520,10 @@ export function crossCheckWithRegistry(
     // Check directors
     const submittedDirs = new Set(submission.spv.directors.map(d => d.toLowerCase()));
     const mcaDirs = new Set(mcaResult.data.directors.map(d => d.name.toLowerCase()));
-    const directorOverlap = [...submittedDirs].filter(d => 
+    const directorOverlap = [...submittedDirs].filter(d =>
       [...mcaDirs].some(md => calculateStringSimilarity(d, md) > 0.8)
     ).length / Math.max(submittedDirs.size, mcaDirs.size);
-    
+
     matches.push({
       field: 'Directors',
       submitted: submission.spv.directors.join(', '),
@@ -538,7 +538,7 @@ export function crossCheckWithRegistry(
     if (!extraction.success || !extraction.data) continue;
 
     const fields = extraction.data.extractedFields;
-    
+
     // Check size if available
     if (fields.plotArea && typeof fields.plotArea === 'number') {
       const sizeDiff = Math.abs(fields.plotArea - submission.specifications.size) / submission.specifications.size;
@@ -557,7 +557,7 @@ export function crossCheckWithRegistry(
 
     // Check encumbrances
     if (fields.encumbrancesFound !== undefined) {
-      const hasEncumbrances = fields.encumbrancesFound > 0;
+      const hasEncumbrances = (Number(fields.encumbrancesFound) || 0) > 0;
       if (hasEncumbrances) {
         issues.push(`Encumbrance certificate shows ${fields.encumbrancesFound} active encumbrance(s)`);
       }
@@ -588,9 +588,9 @@ export function crossCheckWithRegistry(
 function calculateStringSimilarity(str1: string, str2: string): number {
   const longer = str1.length > str2.length ? str1 : str2;
   const shorter = str1.length > str2.length ? str2 : str1;
-  
+
   if (longer.length === 0) return 1.0;
-  
+
   const editDistance = levenshteinDistance(longer, shorter);
   return (longer.length - editDistance) / longer.length;
 }
@@ -629,17 +629,17 @@ export interface ProductionOracleResult {
   mcaVerification: MCAVerificationResult;
   documentExtraction: DocumentExtractionResult[];
   registryCrossCheck: RegistryCrossCheckResult;
-  
+
   // Aggregated scores
   documentScore: number;
   mcaScore: number;
   crossCheckScore: number;
   overallScore: number;
-  
+
   // Issues and flags
   criticalIssues: string[];
   warnings: string[];
-  
+
   // Verification status
   passed: boolean;
 }
@@ -649,57 +649,57 @@ export async function runProductionOracle(
 ): Promise<ProductionOracleResult> {
   // Step 1: Verify all document URLs
   const documentVerification = await verifyAllDocuments(submission);
-  
+
   // Step 2: Verify SPV with MCA
   const mcaVerification = await verifyWithMCA(submission.spv);
-  
+
   // Step 3: Extract data from documents
-  const documentTypes: Array<'title_deed' | 'incorporation_cert' | 'moa' | 'board_resolution' | 'tax_receipt' | 'encumbrance_cert' | 'generic'> = 
+  const documentTypes: Array<'title_deed' | 'incorporation_cert' | 'moa' | 'board_resolution' | 'tax_receipt' | 'encumbrance_cert' | 'generic'> =
     ['title_deed', 'encumbrance_cert', 'tax_receipt'];
-  
+
   const documentExtraction = await Promise.all(
-    submission.documentUrls.slice(0, 3).map((url, idx) => 
+    submission.documentUrls.slice(0, 3).map((url, idx) =>
       extractDocumentData(url, documentTypes[idx] || 'generic')
     )
   );
-  
+
   // Step 4: Cross-check with registry
   const registryCrossCheck = crossCheckWithRegistry(
     submission,
     mcaVerification,
     documentExtraction
   );
-  
+
   // Calculate scores
   const accessibleDocs = documentVerification.documents.filter(d => d.accessible).length;
   const totalDocs = documentVerification.documents.length;
   const documentScore = totalDocs > 0 ? (accessibleDocs / totalDocs) * 100 : 50;
-  
+
   const mcaScore = mcaVerification.verificationScore;
   const crossCheckScore = registryCrossCheck.overallScore;
-  
+
   // Weighted overall score
-  const overallScore = 
+  const overallScore =
     documentScore * 0.2 +
     mcaScore * 0.4 +
     crossCheckScore * 0.4;
-  
+
   // Collect issues
   const criticalIssues: string[] = [];
   const warnings: string[] = [];
-  
+
   // Document issues
   documentVerification.documents
     .filter(d => !d.accessible)
     .forEach(d => criticalIssues.push(`Document not accessible: ${d.url}`));
-  
+
   // MCA issues
   if (!mcaVerification.found) {
     criticalIssues.push('SPV not found in MCA database');
   } else if (mcaVerification.data?.status !== 'Active') {
     criticalIssues.push(`SPV status is ${mcaVerification.data?.status}, not Active`);
   }
-  
+
   mcaVerification.issues.forEach(issue => {
     if (issue.includes('not found') || issue.includes('Strike Off')) {
       criticalIssues.push(issue);
@@ -707,7 +707,7 @@ export async function runProductionOracle(
       warnings.push(issue);
     }
   });
-  
+
   // Cross-check issues
   registryCrossCheck.issues.forEach(issue => {
     if (issue.includes('discrepancy') || issue.includes('mismatch')) {
@@ -716,13 +716,13 @@ export async function runProductionOracle(
       criticalIssues.push(issue);
     }
   });
-  
-  const passed = 
+
+  const passed =
     criticalIssues.length === 0 &&
     documentScore >= 70 &&
     mcaScore >= 60 &&
     overallScore >= 70;
-  
+
   return {
     documentVerification: {
       results: [...documentVerification.documents, ...documentVerification.images, ...documentVerification.videos],

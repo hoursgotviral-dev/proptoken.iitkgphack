@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Building2, Eye, EyeOff, Loader2 } from 'lucide-react';
 
@@ -10,13 +10,16 @@ const SignUp: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { signUp } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/dashboard';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
       await signUp(formData.email, formData.name);
-      navigate('/dashboard');
+      await signUp(formData.email, formData.name);
+      navigate(from, { replace: true });
     } catch (error) {
       console.error(error);
     } finally {
@@ -29,7 +32,9 @@ const SignUp: React.FC = () => {
     try {
       // Simulate Google OAuth flow
       await signUp('google-investor@gmail.com', 'Google Investor');
-      navigate('/dashboard');
+      // Simulate Google OAuth flow
+      await signUp('google-investor@gmail.com', 'Google Investor');
+      navigate(from, { replace: true });
     } catch (error) {
       console.error(error);
     } finally {
@@ -45,7 +50,7 @@ const SignUp: React.FC = () => {
         </div>
         <span>PropToken</span>
       </Link>
-      
+
       <div className="w-full max-w-md bg-white dark:bg-slate-900 p-10 rounded-2xl border-2 border-slate-100 dark:border-slate-800">
         <h2 className="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter mb-2">Create Identity</h2>
         <p className="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-10">Access the token market</p>
@@ -53,9 +58,9 @@ const SignUp: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Full Identity</label>
-            <input 
+            <input
               required
-              type="text" 
+              type="text"
               placeholder="John Doe"
               className="w-full px-6 py-4 rounded-xl border-2 border-slate-100 dark:border-slate-800 bg-transparent dark:text-slate-100 focus:border-indigo-600 outline-none transition-all font-bold"
               value={formData.name}
@@ -64,9 +69,9 @@ const SignUp: React.FC = () => {
           </div>
           <div>
             <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Email Address</label>
-            <input 
+            <input
               required
-              type="email" 
+              type="email"
               placeholder="name@example.com"
               className="w-full px-6 py-4 rounded-xl border-2 border-slate-100 dark:border-slate-800 bg-transparent dark:text-slate-100 focus:border-indigo-600 outline-none transition-all font-bold"
               value={formData.email}
@@ -75,15 +80,15 @@ const SignUp: React.FC = () => {
           </div>
           <div className="relative">
             <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Access Key</label>
-            <input 
+            <input
               required
-              type={showPassword ? "text" : "password"} 
+              type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               className="w-full px-6 py-4 rounded-xl border-2 border-slate-100 dark:border-slate-800 bg-transparent dark:text-slate-100 focus:border-indigo-600 outline-none transition-all font-bold"
               value={formData.password}
               onChange={e => setFormData({ ...formData, password: e.target.value })}
             />
-            <button 
+            <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-6 bottom-4 text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
@@ -92,9 +97,9 @@ const SignUp: React.FC = () => {
             </button>
           </div>
 
-          <button 
+          <button
             disabled={isLoading}
-            type="submit" 
+            type="submit"
             className="w-full bg-indigo-600 text-white py-5 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-slate-900 dark:hover:bg-slate-800 transition-all flex items-center justify-center disabled:opacity-70 btn-flat"
           >
             {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Authorize Registration"}
@@ -110,7 +115,7 @@ const SignUp: React.FC = () => {
           </div>
         </div>
 
-        <button 
+        <button
           onClick={handleGoogleSignUp}
           disabled={isLoading}
           className="w-full bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 text-slate-900 dark:text-slate-100 py-4 rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-3 btn-flat mb-6"

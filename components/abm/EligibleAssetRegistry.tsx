@@ -4,8 +4,8 @@ import {
   Users, ChevronRight, Search, Filter, RefreshCw, Loader2,
   CheckCircle2, AlertTriangle
 } from 'lucide-react';
-import { EligibleAsset } from '../abmTypes';
-import { getEligibleAssets, claimCashFlowExposure } from '../abmApi';
+import { EligibleAsset } from "../../abmTypes";
+import { getEligibleAssets, claimCashFlowExposure } from "../../abmApi";
 
 const EligibleAssetRegistry: React.FC = () => {
   const [assets, setAssets] = useState<EligibleAsset[]>([]);

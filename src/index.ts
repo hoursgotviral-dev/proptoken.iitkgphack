@@ -14,7 +14,7 @@ import { getWalletPositions, getWalletSummary } from './services/walletService';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 
 /**
  * MIDDLEWARE SETUP
@@ -26,8 +26,8 @@ appInstance.use(express.json({ limit: '10mb' }));
 
 // Root API
 app.get('/', (req: Request, res: Response) => {
-  (res as any).json({ 
-    success: true, 
+  (res as any).json({
+    success: true,
     message: 'PropToken Ledger API v1.0',
     status: 'Operational',
     modules: {
@@ -93,7 +93,7 @@ app.get('/yield', requireAuth, (req: Request, res: Response) => {
     { month: 'Sep', income: 9300 }, { month: 'Oct', income: 10500 },
     { month: 'Nov', income: 11200 }, { month: 'Dec', income: 12500 },
   ];
-  
+
   const yieldData = positions.map(p => ({
     assetId: p.assetId,
     assetName: p.assetName,

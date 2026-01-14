@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { 
-  FileText, MapPin, Building2, DollarSign, Users, Upload, 
+import {
+  FileText, MapPin, Building2, DollarSign, Users, Upload,
   ChevronRight, ChevronLeft, AlertCircle, CheckCircle2, Loader2,
   Briefcase, FileCheck, Target
 } from 'lucide-react';
-import { SubmissionFormData, AssetCategory } from '../abmTypes';
-import { createSubmission, runVerification } from '../abmApi';
+import { SubmissionFormData, AssetCategory } from "../../abmTypes";
+import { createSubmission, runVerification } from "../../abmApi";
 
 interface Props {
   onSubmissionComplete: (submissionId: string) => void;
@@ -79,12 +79,12 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
       const newData = { ...prev };
       const keys = path.split('.');
       let current: any = newData;
-      
+
       for (let i = 0; i < keys.length - 1; i++) {
         current = current[keys[i]];
       }
       current[keys[keys.length - 1]] = value;
-      
+
       return newData;
     });
   };
@@ -92,18 +92,18 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     setError('');
-    
+
     try {
       // Generate signature (in production, this would be from wallet)
       const dataToSign = { ...formData, signature: '' };
-      dataToSign.signature = `0x${Array.from({length: 64}, () => Math.floor(Math.random() * 16).toString(16)).join('')}`;
+      dataToSign.signature = `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('')}`;
       dataToSign.submitterId = dataToSign.walletAddress;
-      
+
       const result = await createSubmission(dataToSign);
-      
+
       // Automatically run verification
       await runVerification(result.submissionId);
-      
+
       onSubmissionComplete(result.submissionId);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Submission failed');
@@ -119,7 +119,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
           <div className="space-y-6">
             <h3 className="text-xl font-black text-slate-900 dark:text-white">Identity & Wallet</h3>
             <p className="text-slate-500 dark:text-slate-400 text-sm">Connect your identity for ownership verification</p>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Wallet Address *</label>
@@ -131,7 +131,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('walletAddress', e.target.value)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Decentralized ID (DID)</label>
                 <input
@@ -145,12 +145,12 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
             </div>
           </div>
         );
-        
+
       case 2:
         return (
           <div className="space-y-6">
             <h3 className="text-xl font-black text-slate-900 dark:text-white">Asset Information</h3>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Asset Name *</label>
@@ -162,7 +162,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('assetName', e.target.value)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Category *</label>
                 <select
@@ -176,7 +176,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   <option value="ip-rights">IP Rights</option>
                 </select>
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Property Type *</label>
                 <select
@@ -190,7 +190,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   <option value="agricultural">Agricultural</option>
                 </select>
               </div>
-              
+
               <div className="col-span-2">
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Address *</label>
                 <input
@@ -201,7 +201,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('location.address', e.target.value)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">City *</label>
                 <input
@@ -211,7 +211,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('location.city', e.target.value)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">State *</label>
                 <input
@@ -221,7 +221,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('location.state', e.target.value)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Postal Code *</label>
                 <input
@@ -231,7 +231,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('location.postalCode', e.target.value)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Latitude</label>
                 <input
@@ -242,7 +242,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('location.coordinates.lat', parseFloat(e.target.value) || 0)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Longitude</label>
                 <input
@@ -253,7 +253,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('location.coordinates.lng', parseFloat(e.target.value) || 0)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Size (sq ft) *</label>
                 <input
@@ -263,7 +263,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('specifications.size', parseInt(e.target.value) || 0)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Age (years)</label>
                 <input
@@ -273,7 +273,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('specifications.age', parseInt(e.target.value) || 0)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Condition *</label>
                 <select
@@ -290,13 +290,13 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
             </div>
           </div>
         );
-        
+
       case 3:
         return (
           <div className="space-y-6">
             <h3 className="text-xl font-black text-slate-900 dark:text-white">SPV Details</h3>
             <p className="text-slate-500 dark:text-slate-400 text-sm">Special Purpose Vehicle holding the asset</p>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">SPV Name *</label>
@@ -308,7 +308,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('spv.spvName', e.target.value)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Registration Number *</label>
                 <input
@@ -319,7 +319,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('spv.spvRegistrationNumber', e.target.value)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Jurisdiction *</label>
                 <input
@@ -330,7 +330,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('spv.jurisdiction', e.target.value)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Incorporation Date *</label>
                 <input
@@ -340,7 +340,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('spv.incorporationDate', e.target.value)}
                 />
               </div>
-              
+
               <div className="col-span-2">
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Registered Address *</label>
                 <input
@@ -350,7 +350,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('spv.registeredAddress', e.target.value)}
                 />
               </div>
-              
+
               <div className="col-span-2">
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Directors (comma-separated) *</label>
                 <input
@@ -364,13 +364,13 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
             </div>
           </div>
         );
-        
+
       case 4:
         return (
           <div className="space-y-6">
             <h3 className="text-xl font-black text-slate-900 dark:text-white">Documents & Proofs</h3>
             <p className="text-slate-500 dark:text-slate-400 text-sm">Provide registry IDs and document URLs</p>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Property Registry IDs *</label>
@@ -382,7 +382,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('registryIds', e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Document URLs</label>
                 <input
@@ -393,7 +393,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('documentUrls', e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Image URLs *</label>
                 <input
@@ -407,12 +407,12 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
             </div>
           </div>
         );
-        
+
       case 5:
         return (
           <div className="space-y-6">
             <h3 className="text-xl font-black text-slate-900 dark:text-white">Financial Information</h3>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Monthly Rent (₹) *</label>
@@ -423,7 +423,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('financials.currentRent', parseInt(e.target.value) || 0)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Expected Yield (%) *</label>
                 <input
@@ -434,7 +434,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('financials.expectedYield', parseFloat(e.target.value) || 0)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Annual Expenses (₹) *</label>
                 <input
@@ -444,7 +444,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('financials.annualExpenses', parseInt(e.target.value) || 0)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Occupancy Rate (%) *</label>
                 <input
@@ -456,7 +456,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('financials.occupancyRate', parseInt(e.target.value) || 0)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Tenant Count</label>
                 <input
@@ -467,7 +467,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('financials.tenantCount', parseInt(e.target.value) || 0)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Lease Terms (months)</label>
                 <input
@@ -478,7 +478,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('financials.leaseTermsMonths', parseInt(e.target.value) || 0)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Claimed Value (₹) *</label>
                 <input
@@ -488,7 +488,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('claimedValue', parseInt(e.target.value) || 0)}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Target Raise (₹) *</label>
                 <input
@@ -498,7 +498,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   onChange={e => updateFormData('targetRaise', parseInt(e.target.value) || 0)}
                 />
               </div>
-              
+
               <div className="col-span-2">
                 <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Tokenization Intent *</label>
                 <textarea
@@ -512,12 +512,12 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
             </div>
           </div>
         );
-        
+
       case 6:
         return (
           <div className="space-y-6">
             <h3 className="text-xl font-black text-slate-900 dark:text-white">Review Submission</h3>
-            
+
             <div className="space-y-4">
               <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
                 <h4 className="font-bold text-slate-900 dark:text-white mb-2">Asset: {formData.assetName || 'Not specified'}</h4>
@@ -527,12 +527,12 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   <span className="px-2 py-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold rounded">{formData.specifications.size} sq ft</span>
                 </div>
               </div>
-              
+
               <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
                 <h4 className="font-bold text-slate-900 dark:text-white mb-2">SPV: {formData.spv.spvName || 'Not specified'}</h4>
                 <p className="text-sm text-slate-500 dark:text-slate-400">Reg: {formData.spv.spvRegistrationNumber}</p>
               </div>
-              
+
               <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
                 <h4 className="font-bold text-slate-900 dark:text-white mb-2">Financials</h4>
                 <div className="grid grid-cols-2 gap-2 text-sm">
@@ -542,7 +542,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
                   <div><span className="text-slate-500 dark:text-slate-400">Target Raise:</span> <span className="font-bold text-slate-900 dark:text-white">₹{formData.targetRaise.toLocaleString()}</span></div>
                 </div>
               </div>
-              
+
               <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
                 <div className="flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
@@ -557,7 +557,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
             </div>
           </div>
         );
-        
+
       default:
         return null;
     }
@@ -570,17 +570,16 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
         <div className="flex items-center justify-between">
           {STEPS.map((step, index) => (
             <React.Fragment key={step.id}>
-              <div 
+              <div
                 className={`flex flex-col items-center cursor-pointer ${currentStep >= step.id ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-600'}`}
                 onClick={() => setCurrentStep(step.id)}
               >
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 transition-colors ${
-                  currentStep === step.id 
-                    ? 'bg-indigo-600 text-white' 
-                    : currentStep > step.id 
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 transition-colors ${currentStep === step.id
+                    ? 'bg-indigo-600 text-white'
+                    : currentStep > step.id
                       ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400'
                       : 'bg-slate-200 dark:bg-slate-700'
-                }`}>
+                  }`}>
                   {currentStep > step.id ? <CheckCircle2 className="w-5 h-5" /> : <step.icon className="w-5 h-5" />}
                 </div>
                 <span className="text-xs font-bold hidden sm:block">{step.title}</span>
@@ -601,9 +600,9 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
             <span className="text-red-700 dark:text-red-300 font-medium">{error}</span>
           </div>
         )}
-        
+
         {renderStep()}
-        
+
         {/* Navigation */}
         <div className="mt-8 flex justify-between">
           <button
@@ -613,7 +612,7 @@ const AssetSubmissionForm: React.FC<Props> = ({ onSubmissionComplete }) => {
           >
             <ChevronLeft className="w-5 h-5" /> Back
           </button>
-          
+
           {currentStep < 6 ? (
             <button
               onClick={() => setCurrentStep(prev => Math.min(6, prev + 1))}

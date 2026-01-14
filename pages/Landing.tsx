@@ -44,27 +44,42 @@ const Landing: React.FC = () => {
             </Link>
           </div>
         </div>
-        
+
         {/* Simple Flat Visual */}
         <div className="relative">
           <div className="w-full aspect-square bg-indigo-50 rounded-[3rem] relative overflow-hidden">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-indigo-600 rounded-3xl transform rotate-12 flex items-center justify-center">
-               <div className="w-4/5 h-4/5 bg-white rounded-2xl flex flex-col p-6 text-indigo-600">
-                  <div className="w-12 h-12 bg-indigo-50 rounded-lg mb-4 flex items-center justify-center">
-                    <Building2 />
+              <div className="w-4/5 h-4/5 bg-white rounded-2xl flex flex-col p-6 text-indigo-600">
+                <div className="w-12 h-12 bg-indigo-50 rounded-lg mb-4 flex items-center justify-center">
+                  <Building2 />
+                </div>
+                <p className="font-black text-2xl tracking-tight">Heritage Acres</p>
+                <p className="text-sm font-bold opacity-60 uppercase mb-auto">ID: PL-5600</p>
+                <div className="flex justify-between items-end">
+                  <div>
+                    <p className="text-xs uppercase font-black opacity-40">Yearly Yield</p>
+                    <p className="text-xl font-black">12.5%</p>
                   </div>
-                  <p className="font-black text-2xl tracking-tight">Heritage Acres</p>
-                  <p className="text-sm font-bold opacity-60 uppercase mb-auto">ID: PL-5600</p>
-                  <div className="flex justify-between items-end">
-                    <div>
-                      <p className="text-xs uppercase font-black opacity-40">Yearly Yield</p>
-                      <p className="text-xl font-black">12.5%</p>
-                    </div>
-                    <div className="bg-emerald-500 text-white px-3 py-1 rounded-lg text-xs font-black">₹ ACTIVE</div>
-                  </div>
-               </div>
+                  <div className="bg-emerald-500 text-white px-3 py-1 rounded-lg text-xs font-black">₹ ACTIVE</div>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Asset Owner CTA */}
+      <section className="bg-slate-900 py-20 px-8">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+          <div className="text-white">
+            <h2 className="text-4xl font-black tracking-tight mb-4">Got Land? Tokenize it.</h2>
+            <p className="text-slate-400 font-medium max-w-xl text-lg">
+              Unlock the value of your real estate assets. Register for our Autonomous Asset Onboarding and get verified in minutes.
+            </p>
+          </div>
+          <Link to="/autonomous/submit" className="bg-emerald-500 text-white px-10 py-5 rounded-lg font-black uppercase tracking-widest text-sm hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20 btn-flat flex items-center gap-3">
+            Register Asset <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
       </section>
 
