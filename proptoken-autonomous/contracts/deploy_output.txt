@@ -1,0 +1,716 @@
+No files changed, compilation skipped
+Contract: AssetRegistry
+Transaction: {
+  "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+  "to": null,
+  "maxFeePerGas": "0x77359401",
+  "maxPriorityFeePerGas": "0x1",
+  "gas": "0xffd9a",
+  "input": "0x60803461008c57601f61124038819003918201601f19168301916001600160401b038311848410176100905780849260209460405283398101031261008c57516001600160a01b038116810361008c5761007c9060017f9b779b17422d0df92223018b32b4d1fa46e071723d6817e2486d003becc55f00556100a4565b5060405161110c90816101348239f35b5f80fd5b634e487b7160e01b5f52604160045260245ffd5b6001600160a01b03165f8181527fad3228b676f7d3cd4284a5443f17f1962b36e491b30a40b2405849e597ba5fb5602052604081205490919060ff1661012f57818052816020526040822081835260205260408220600160ff1982541617905533917f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d8180a4600190565b509056fe6080806040526004361015610012575f80fd5b5f3560e01c90816301ffc9a714610e455750806307e2cea514610e0b578063248a9ca314610ddf5780632cc3ce8014610c235780632d38f89b14610b5f5780632f2ff15d14610b23578063320cc59714610aa457806336568abe14610a5d5780633c74e0d914610a12578063455bd951146109bb578063610e45751461096c57806371aa80fd1461053c5780637813f3f21461035e57806391d148541461031657806398ca362d146102e75780639fda5b6614610230578063a217fddf14610216578063b12e441014610174578063d547741f146101365763fa2dabad146100f8575f80fd5b34610132575f3660031901126101325760206040517f36fd43ede163045b10e1f0abd16f62f165fce3fa7b6cde217bcea3bc47663acc8152f35b5f80fd5b3461013257604036600319011261013257610172600435610155610eae565b90805f525f60205261016d600160405f200154610f66565b611003565b005b346101325760208060031936011261013257600435805f52600382526101a060ff60405f205416611093565b805f526001825260ff600960405f20015460081c16156101db575f526001815260018060a01b03600960405f20015460101c16604051908152f35b60405162461bcd60e51b8152600481018390526013602482015272105cdcd95d081b9bdd081d1bdad95b9a5e9959606a1b6044820152606490fd5b34610132575f3660031901126101325760206040515f8152f35b34610132576020366003190112610132576004355f52600160205261018060405f2080549060018101546002820154916003810154926004820154600583015460068401549160018060a01b0396876007870154169460096008880154970154976040519a8b5260208b015260408a01526060890152608088015260a087015260c086015260e085015261010084015260ff8116151561012084015260ff8160081c16151561014084015260101c16610160820152f35b34610132576020366003190112610132576004355f526003602052602060ff60405f2054166040519015158152f35b346101325760403660031901126101325761032f610eae565b6004355f525f60205260405f209060018060a01b03165f52602052602060ff60405f2054166040519015158152f35b346101325760403660031901126101325760043561037a610eae565b335f9081527fad3228b676f7d3cd4284a5443f17f1962b36e491b30a40b2405849e597ba5fb5602090815260409091205491929160ff161561051e57815f52600381526103cd60ff60405f205416611093565b815f526001815260ff600960405f20015416156104e557815f526001815260ff600960405f20015460081c166104ad576001600160a01b038316928315610470575f83815260018352604090206009018054610100600160b01b03191660109290921b62010000600160b01b0316919091176101001790557f02d603cbbfc6aa2a956790965e2d8cd960ef8a40a9a6f5fe59a7ec403d0712e490604051428152a3005b60405162461bcd60e51b8152600481018390526015602482015274496e76616c696420746f6b656e206164647265737360581b6044820152606490fd5b6064906040519062461bcd60e51b825260048201526011602482015270105b1c9958591e481d1bdad95b9a5e9959607a1b6044820152fd5b6064906040519062461bcd60e51b8252600482015260126024820152714173736574206e6f7420656c696769626c6560701b6044820152fd5b60405163e2517d3f60e01b81523360048201525f6024820152604490fd5b34610132576101208060031936011261013257610557610eae565b610104368111610132573591821515830361013257610574610eed565b7f9b779b17422d0df92223018b32b4d1fa46e071723d6817e2486d003becc55f0091600283541461095a57600283556004355f52600360205260ff60405f205416610915576001600160a01b03169081156108e057670de0b6b3a76400009060843582811161089b5760a435928084116108565760c43590811161081b5760e43590606482116107e157610734946040519361060f85611076565b6004358552604435602086015260643560408601526060850152608084015260a083015260c08201528360e082015242610100820152851515828201525f6101408201525f6101608201526004355f526001602052600960405f20825181556020830151600182015560408301516002820155606083015160038201556080830151600482015560a0830151600582015560c083015160068201556007810160018060a01b0360e0850151166bffffffffffffffffffffffff60a01b825416179055610100830151600882015501918101511515825460ff61ff00610140850151151560081b1692169061ffff19161717825561016060018060a01b039101511681549062010000600160b01b039060101b169062010000600160b01b031916179055565b805f52600260205260405f2092835493680100000000000000008510156107cd57846107669160018097018155610ec4565b81549060031b90600435821b915f19901b19161790556004355f52600360205260405f208460ff1982541617905560405190151581524260208201527fbe76624284ab25f91f68e1254899d8730ad25a4fdcab3069a1d02bc4513638ff604060043592a355005b634e487b7160e01b5f52604160045260245ffd5b60405162461bcd60e51b8152602060048201526012602482015271496e76616c6964207269736b2073636f726560701b6044820152606490fd5b60405162461bcd60e51b8152602060048201526013602482015272496e76616c69642066726175642073636f726560681b6044820152606490fd5b60405162461bcd60e51b815260206004820152601760248201527f496e76616c6964206f776e6572736869702073636f72650000000000000000006044820152606490fd5b60405162461bcd60e51b815260206004820152601760248201527f496e76616c6964206578697374656e63652073636f72650000000000000000006044820152606490fd5b60405162461bcd60e51b815260206004820152600d60248201526c24b73b30b634b21037bbb732b960991b6044820152606490fd5b60405162461bcd60e51b815260206004820152601860248201527f417373657420616c7265616479207265676973746572656400000000000000006044820152606490fd5b604051633ee5aeb560e01b8152600490fd5b34610132576020366003190112610132576004355f52600360205260ff60405f205416806109a2575b6020906040519015158152f35b50600160205260405f206009015460081c60ff16610995565b34610132576040366003190112610132576109d4610e98565b6001600160a01b03165f9081526002602052604090208054602435919082101561013257602091610a0491610ec4565b90546040519160031b1c8152f35b34610132576020366003190112610132576004355f52600360205260ff60405f20541680610a47576020906040519015158152f35b50600160205260405f206009015460ff16610995565b3461013257604036600319011261013257610a76610eae565b336001600160a01b03821603610a925761017290600435611003565b60405163334bd91960e11b8152600490fd5b34610132576060366003190112610132576004357f6ca74a30ba77ecd060c87cd569ca54a67fcd0a5bf5ce59a83faa3a06663ede8e6040602435604435610ae9610eed565b845f526003602052610b0060ff845f205416611093565b845f526001602052806002845f20846001820155015582519182526020820152a2005b3461013257604036600319011261013257610172600435610b42610eae565b90805f525f602052610b5a600160405f200154610f66565b610f87565b3461013257602080600319360112610132576001600160a01b03610b81610e98565b165f526002815260405f206040518083835491828152019081935f52845f20905f5b86828210610c0f5750505050819003601f01601f191681019267ffffffffffffffff8411828510176107cd578392918360405281840190828552518091526040840192915f5b828110610bf857505050500390f35b835185528695509381019392810192600101610be9565b835485529093019260019283019201610ba3565b34610132576020366003190112610132576004355f610160604051610c4781611076565b8281528260208201528260408201528260608201528260808201528260a08201528260c08201528260e08201528261010082015282610120820152826101408201520152805f526003602052610ca360ff60405f205416611093565b5f52600160205261018060405f20604051610cbd81611076565b600982549283835260018101546020840152600281015460408401526003810154606084015260048101546080840152600581015460a0840152600681015460c084015260018060a01b0360078201541660e08401526008810154610100840152015460ff8116151561012083015260ff8160081c16151561014083015260018060a01b039060101c166101608201526040519182526020810151602083015260408101516040830152606081015160608301526080810151608083015260a081015160a083015260c081015160c083015260018060a01b0360e08201511660e08301526101008101516101008301526101208101511515610120830152610140810151151561014083015261016060018060a01b0391015116610160820152f35b34610132576020366003190112610132576004355f525f6020526020600160405f200154604051908152f35b34610132575f3660031901126101325760206040517f68e79a7bf1e0bc45d0a330c573bc367f9cf464fd326078812f301165fbda4ef18152f35b34610132576020366003190112610132576004359063ffffffff60e01b821680920361013257602091637965db0b60e01b8114908115610e87575b5015158152f35b6301ffc9a760e01b14905083610e80565b600435906001600160a01b038216820361013257565b602435906001600160a01b038216820361013257565b8054821015610ed9575f5260205f2001905f90565b634e487b7160e01b5f52603260045260245ffd5b335f9081527f8e2530cb50094054ac6099ab3e26a0b622fb70ce2aa7ce65c7bacccaee7f381d60205260409020547f36fd43ede163045b10e1f0abd16f62f165fce3fa7b6cde217bcea3bc47663acc9060ff1615610f485750565b6044906040519063e2517d3f60e01b82523360048301526024820152fd5b805f525f60205260405f20335f5260205260ff60405f20541615610f485750565b905f9180835282602052604083209160018060a01b03169182845260205260ff604084205416155f14610ffe57808352826020526040832082845260205260408320600160ff198254161790557f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d339380a4600190565b505090565b905f9180835282602052604083209160018060a01b03169182845260205260ff6040842054165f14610ffe5780835282602052604083208284526020526040832060ff1981541690557ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b339380a4600190565b610180810190811067ffffffffffffffff8211176107cd57604052565b1561109a57565b60405162461bcd60e51b8152602060048201526014602482015273105cdcd95d081b9bdd081c9959da5cdd195c995960621b6044820152606490fdfea264697066735822122063ad1f850ffc0739a62fabb5aec1c0b8e3655740193f7ab7a778a05af3e5d83c64736f6c63430008140033000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+  "nonce": "0x0",
+  "chainId": "0x7a69"
+}
+ABI: [
+  {
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "admin",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "CONSENSUS_ROLE",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "DEFAULT_ADMIN_ROLE",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "ORACLE_ROLE",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "assets",
+    "inputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "fingerprint",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "oracleAttestation",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "abmOutputHash",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "existenceScore",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "ownershipScore",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "fraudScore",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "riskScore",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "owner",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "timestamp",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "eligible",
+        "type": "bool",
+        "internalType": "bool"
+      },
+      {
+        "name": "tokenized",
+        "type": "bool",
+        "internalType": "bool"
+      },
+      {
+        "name": "tokenAddress",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getAsset",
+    "inputs": [
+      {
+        "name": "fingerprint",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple",
+        "internalType": "struct AssetRegistry.Asset",
+        "components": [
+          {
+            "name": "fingerprint",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "oracleAttestation",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "abmOutputHash",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "existenceScore",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "ownershipScore",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "fraudScore",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "riskScore",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "owner",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "timestamp",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "eligible",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "tokenized",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "tokenAddress",
+            "type": "address",
+            "internalType": "address"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getOwnerAssets",
+    "inputs": [
+      {
+        "name": "owner",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32[]",
+        "internalType": "bytes32[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getRoleAdmin",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getTokenAddress",
+    "inputs": [
+      {
+        "name": "fingerprint",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "grantRole",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "hasRole",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "isEligible",
+    "inputs": [
+      {
+        "name": "fingerprint",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "isTokenized",
+    "inputs": [
+      {
+        "name": "fingerprint",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "markAsTokenized",
+    "inputs": [
+      {
+        "name": "fingerprint",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "tokenAddress",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "ownerAssets",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "registerAsset",
+    "inputs": [
+      {
+        "name": "fingerprint",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "owner",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "oracleAttestation",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "abmOutputHash",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "scores",
+        "type": "uint256[4]",
+        "internalType": "uint256[4]"
+      },
+      {
+        "name": "eligible",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "registeredFingerprints",
+    "inputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "renounceRole",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "callerConfirmation",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "revokeRole",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "supportsInterface",
+    "inputs": [
+      {
+        "name": "interfaceId",
+        "type": "bytes4",
+        "internalType": "bytes4"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "updateAsset",
+    "inputs": [
+      {
+        "name": "fingerprint",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "newOracleAttestation",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "newAbmHash",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "AssetRegistered",
+    "inputs": [
+      {
+        "name": "fingerprint",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "owner",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "eligible",
+        "type": "bool",
+        "indexed": false,
+        "internalType": "bool"
+      },
+      {
+        "name": "timestamp",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "AssetTokenized",
+    "inputs": [
+      {
+        "name": "fingerprint",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "tokenAddress",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "timestamp",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "AssetUpdated",
+    "inputs": [
+      {
+        "name": "fingerprint",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "newOracleAttestation",
+        "type": "bytes32",
+        "indexed": false,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "newAbmHash",
+        "type": "bytes32",
+        "indexed": false,
+        "internalType": "bytes32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoleAdminChanged",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "previousAdminRole",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "newAdminRole",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoleGranted",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "account",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "sender",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoleRevoked",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "account",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "sender",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "AccessControlBadConfirmation",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "AccessControlUnauthorizedAccount",
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "neededRole",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "ReentrancyGuardReentrantCall",
+    "inputs": []
+  }
+]
+

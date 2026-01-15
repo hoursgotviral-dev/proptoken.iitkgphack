@@ -17,6 +17,11 @@ import Account from './pages/Account';
 import ABM from './pages/ABM';
 import AutonomousVerification from './pages/AutonomousVerification';
 import AssetSubmissionForm from './components/autonomous/AssetSubmissionForm';
+import InvestorDashboard from './pages/InvestorDashboard';
+import IssuerDashboard from './pages/IssuerDashboard';
+import TokenDetail from './pages/TokenDetail';
+import TradingPage from './pages/TradingPage';
+import DeFiPage from './pages/DeFiPage';
 
 // Components
 import Layout from './components/Layout';
@@ -51,6 +56,13 @@ const App: React.FC = () => {
           {/* Autonomous Asset Onboarding (Legacy Integration) */}
           <Route path="/autonomous/submit" element={<ProtectedRoute><AssetSubmissionForm /></ProtectedRoute>} />
           <Route path="/autonomous/verify/:id" element={<ProtectedRoute><AutonomousVerification /></ProtectedRoute>} />
+
+          {/* Step 5: Application & Market Layer */}
+          <Route path="/investor" element={<ProtectedRoute><InvestorDashboard /></ProtectedRoute>} />
+          <Route path="/issuer" element={<ProtectedRoute><IssuerDashboard /></ProtectedRoute>} />
+          <Route path="/tokens/:address" element={<ProtectedRoute><TokenDetail /></ProtectedRoute>} />
+          <Route path="/market/:address" element={<ProtectedRoute><TradingPage /></ProtectedRoute>} />
+          <Route path="/defi" element={<ProtectedRoute><DeFiPage /></ProtectedRoute>} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
