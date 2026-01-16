@@ -198,16 +198,22 @@ export namespace AssetRegisteredEvent {
   export type InputTuple = [
     fingerprint: BytesLike,
     owner: AddressLike,
+    eligible: boolean,
+    isMock: boolean,
     timestamp: BigNumberish
   ];
   export type OutputTuple = [
     fingerprint: string,
     owner: string,
+    eligible: boolean,
+    isMock: boolean,
     timestamp: bigint
   ];
   export interface OutputObject {
     fingerprint: string;
     owner: string;
+    eligible: boolean;
+    isMock: boolean;
     timestamp: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
@@ -529,7 +535,7 @@ export interface AssetRegistry extends BaseContract {
   >;
 
   filters: {
-    "AssetRegistered(bytes32,address,uint256)": TypedContractEvent<
+    "AssetRegistered(bytes32,address,bool,bool,uint256)": TypedContractEvent<
       AssetRegisteredEvent.InputTuple,
       AssetRegisteredEvent.OutputTuple,
       AssetRegisteredEvent.OutputObject
