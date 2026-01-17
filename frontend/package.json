@@ -7,9 +7,10 @@
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
     "dev:frontend": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "build:frontend": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "type-check": "tsc"
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^2.2.10",
