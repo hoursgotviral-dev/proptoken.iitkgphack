@@ -1,0 +1,54 @@
+type Token @entity {
+  id: ID!                           # Token contract address
+  name: String!
+  symbol: String!
+  totalSupply: BigInt!
+  currentNAV: BigInt!
+  navPerToken: BigInt!
+  createdAt: BigInt!
+  updatedAt: BigInt!
+  
+  # Relationships
+  transfers: [Transfer!]! @derivedFrom(field: "token")
+  navUpdates: [NAVUpdate!]! @derivedFrom(field: "token")
+  holders: [TokenHolder!]! @derivedFrom(field: "token")
+}
+
+type Transfer @entity {
+  id: ID!                           # tx hash + log index
+  token: Token!
+  from: Bytes!
+  to: Bytes!
+  amount: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+}
+
+type NAVUpdate @entity {
+  id: ID!                           # tx hash + log index
+  token: Token!
+  oldNAV: BigInt!
+  newNAV: BigInt!
+  navPerToken: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+}
+
+type TokenHolder @entity {
+  id: ID!                           # Address + token address
+  token: Token!
+  address: Bytes!
+  balance: BigInt!
+  firstPurchaseTime: BigInt!
+  lastActivityTime: BigInt!
+}
+
+type GlobalStats @entity {
+  id: ID!                           # "global"
+  totalTokens: BigInt!
+  totalTransfers: BigInt!
+  totalVolume: BigInt!
+  totalHolders: BigInt!
+}

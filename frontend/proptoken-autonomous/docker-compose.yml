@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - ABM_URL=http://abm-engine:8000
+      - ORACLE_URL=http://oracle-network:8081
+    depends_on:
+      - abm-engine
+      - oracle-network
+
+  abm-engine:
+    build:
+      context: ./abm-engine
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+
+  oracle-network:
+    build:
+      context: ./oracle-network
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    depends_on:
+      - backend

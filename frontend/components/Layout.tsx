@@ -1,8 +1,8 @@
 
 import React from 'react';
-import Sidebar from './Sidebar.tsx';
-import Topbar from './Topbar.tsx';
-import { useAuth } from '../context/AuthContext.tsx';
+import Sidebar from './Sidebar';
+import Topbar from './Topbar';
+import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {

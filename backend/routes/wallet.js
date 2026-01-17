@@ -1,20 +1,32 @@
 import express from "express";
-import auth from "../middleware/auth.js";
 import db from "../db.js";
+import { authenticateToken } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.post("/connect", auth, async (req, res) => {
-  const { address, chain_id } = req.body;
+// Get Wallet Balance
+router.get("/", authenticateToken, async (req, res) => {
+    try {
+        const result = await db.query("SELECT * FROM wallets WHERE user_id = $1", [req.user.id]);
+        if (result.rows.length === 0) {
+            // Should exist if registered, but handling just in case
+            return res.json({ stablecoin_balance: 0 });
+        }
+        res.json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
-  await db.query(
-    `INSERT INTO wallets(user_id,address,chain_id)
-     VALUES($1,$2,$3)
-     ON CONFLICT (user_id,chain_id) DO UPDATE SET address=$2`,
-    [req.user.userId, address, chain_id]
-  );
-
-  res.json({ success: true });
+// Deposit (Mock)
+router.post("/deposit", authenticateToken, async (req, res) => {
+    const { amount } = req.body;
+    try {
+        await db.query("UPDATE wallets SET stablecoin_balance = stablecoin_balance + $1 WHERE user_id = $2", [amount, req.user.id]);
+        res.json({ message: "Deposit successful" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 export default router;

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Building2, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 
@@ -11,6 +11,8 @@ const SignIn: React.FC = () => {
   const [error, setError] = useState('');
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/dashboard';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,7 +20,8 @@ const SignIn: React.FC = () => {
     setError('');
     try {
       await signIn(formData.email);
-      navigate('/dashboard');
+      await signIn(formData.email);
+      navigate(from, { replace: true });
     } catch (err: any) {
       setError(err.message || 'Authentication failed');
     } finally {
@@ -34,7 +37,7 @@ const SignIn: React.FC = () => {
         </div>
         <span>PropToken</span>
       </Link>
-      
+
       <div className="w-full max-w-md bg-white dark:bg-slate-900 p-10 rounded-2xl border-2 border-slate-100 dark:border-slate-800">
         <h2 className="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter mb-2">Welcome Back</h2>
         <p className="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-10">Verify Access Key</p>
@@ -48,9 +51,9 @@ const SignIn: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Email Address</label>
-            <input 
+            <input
               required
-              type="email" 
+              type="email"
               placeholder="name@example.com"
               className="w-full px-6 py-4 rounded-xl border-2 border-slate-100 dark:border-slate-800 bg-transparent dark:text-slate-100 focus:border-indigo-600 outline-none transition-all font-bold"
               value={formData.email}
@@ -62,15 +65,15 @@ const SignIn: React.FC = () => {
               <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Access Key</label>
               <button type="button" className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 hover:underline uppercase tracking-widest">Reset?</button>
             </div>
-            <input 
+            <input
               required
-              type={showPassword ? "text" : "password"} 
+              type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               className="w-full px-6 py-4 rounded-xl border-2 border-slate-100 dark:border-slate-800 bg-transparent dark:text-slate-100 focus:border-indigo-600 outline-none transition-all font-bold"
               value={formData.password}
               onChange={e => setFormData({ ...formData, password: e.target.value })}
             />
-            <button 
+            <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-6 bottom-4 text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
@@ -79,9 +82,9 @@ const SignIn: React.FC = () => {
             </button>
           </div>
 
-          <button 
+          <button
             disabled={isLoading}
-            type="submit" 
+            type="submit"
             className="w-full bg-indigo-600 text-white py-5 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-slate-900 dark:hover:bg-slate-800 transition-all flex items-center justify-center disabled:opacity-70 btn-flat"
           >
             {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Verify & Sign In"}
