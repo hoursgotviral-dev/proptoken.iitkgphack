@@ -1,0 +1,25 @@
+# Source files - don't deploy these
+src/
+components/
+pages/
+*.tsx
+*.ts
+!vite.config.ts
+
+# Development files
+node_modules/
+.env.local
+.env.development
+
+# Build artifacts that aren't in dist
+tsc_output.txt
+build_error.log
+
+# Test files
+test_reports/
+backend_test.py
+
+# Other project folders
+oracle-network/
+proptoken-autonomous/
+subgraph/
