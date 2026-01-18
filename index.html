@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropToken - Flat Modern Real Estate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #111827;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .dark body {
+            background-color: #020617;
+            color: #f8fafc;
+        }
+        .flat-card {
+            border: 2px solid #e5e7eb;
+            transition: border-color 0.2s ease;
+        }
+        .dark .flat-card {
+            border-color: #1e293b;
+        }
+        .flat-card:hover {
+            border-color: #4f46e5;
+        }
+        .btn-flat {
+            transition: transform 0.1s ease, background-color 0.2s ease;
+        }
+        .btn-flat:active {
+            transform: scale(0.98);
+        }
+        /* Remove all soft shadows globally for flat look */
+        * {
+            box-shadow: none !important;
+        }
+    </style>
+</head>
+<body class="antialiased dark:bg-slate-950">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>
