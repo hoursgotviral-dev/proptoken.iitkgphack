@@ -12,7 +12,7 @@ import swapRoutes from "./routes/swap.js";          // ✅ ADD
 import collateralRoutes from "./routes/collateral.js"; // ✅ ADD
 import activityRoutes from "./routes/activity.js";     // ✅ Blockchain Activity Feed
 
-import "./cron/yieldCron.js"; // Auto-start Cron Jobs
+// import "./cron/yieldCron.js"; // Auto-start Cron Jobs (Disabled legacy)
 
 dotenv.config();
 
@@ -33,14 +33,16 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/auth", authRoutes);
-app.use("/assets", assetRoutes);
-app.use("/wallet", walletRoutes);
-app.use("/dashboard", dashboardRoutes);
-app.use("/yield", yieldRoutes);
-app.use("/account", accountRoutes);
-app.use("/swap", swapRoutes);              // ✅ ADD
-app.use("/collateral", collateralRoutes);  // ✅ ADD
-app.use("/activity", activityRoutes);      // ✅ Blockchain Activity Feed
+app.use("/wallet", walletRoutes); // ✅ Mongoose
+app.use("/swap", swapRoutes);     // ✅ Mongoose
+
+// Legacy SQL Routes (Disabled until refactored to Mongoose)
+// app.use("/assets", assetRoutes);
+// app.use("/dashboard", dashboardRoutes);
+// app.use("/yield", yieldRoutes);
+// app.use("/account", accountRoutes);
+// app.use("/collateral", collateralRoutes);
+// app.use("/activity", activityRoutes);
 
 app.get("/", (req, res) => {
   res.json({ status: "PropToken backend running" });

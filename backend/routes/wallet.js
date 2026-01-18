@@ -1,29 +1,45 @@
-import express from "express";
-import db from "../db.js";
-import { authenticateToken } from "../middleware/auth.js";
+import express from 'express';
+import { authenticateToken } from '../middleware/auth.js';
+import Wallet from '../models/Wallet.js';
 
 const router = express.Router();
 
-// Get Wallet Balance
-router.get("/", authenticateToken, async (req, res) => {
+// Get Wallet Balance & Details
+router.get('/', authenticateToken, async (req, res) => {
     try {
-        const result = await db.query("SELECT * FROM wallets WHERE user_id = $1", [req.user.id]);
-        if (result.rows.length === 0) {
-            // Should exist if registered, but handling just in case
-            return res.json({ stablecoin_balance: 0 });
+        const wallet = await Wallet.findOne({ user: req.user.id });
+        if (!wallet) {
+            // Fallback: This might happen if user was created but wallet init failed (rare)
+            return res.status(404).json({ error: "Wallet not found for this user" });
         }
-        res.json(result.rows[0]);
+        res.json(wallet);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// Deposit (Mock)
-router.post("/deposit", authenticateToken, async (req, res) => {
+// Deposit (Mock for Testing)
+router.post('/deposit', authenticateToken, async (req, res) => {
     const { amount } = req.body;
+    if (!amount || amount <= 0) return res.status(400).json({ error: "Invalid amount" });
+
     try {
-        await db.query("UPDATE wallets SET stablecoin_balance = stablecoin_balance + $1 WHERE user_id = $2", [amount, req.user.id]);
-        res.json({ message: "Deposit successful" });
+        let wallet = await Wallet.findOne({ user: req.user.id });
+        if (!wallet) return res.status(404).json({ error: "Wallet not found" });
+
+        wallet.stablecoinBalance += Number(amount);
+
+        // Add history
+        wallet.txHistory = wallet.txHistory || [];
+        wallet.txHistory.push({
+            type: 'DEPOSIT',
+            amount: Number(amount),
+            date: new Date()
+        });
+
+        await wallet.save();
+
+        res.json({ message: "Deposit successful", balance: wallet.stablecoinBalance });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
